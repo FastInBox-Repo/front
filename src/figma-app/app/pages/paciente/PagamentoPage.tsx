@@ -1,0 +1,217 @@
+import { useParams, useNavigate } from "react-router";
+import { ArrowLeft, Lock, CreditCard, Smartphone, Check } from "lucide-react";
+import { mockOrders, mockClinic, formatCurrency } from "../../data/mockData";
+import { useState } from "react";
+import { toast } from "sonner";
+
+type Method = "pix" | "cartao" | "boleto";
+
+export default function PagamentoPage() {
+  const { code } = useParams();
+  const navigate = useNavigate();
+  const [method, setMethod] = useState<Method>("pix");
+  const [cardNumber, setCardNumber] = useState("");
+  const [cardName, setCardName] = useState("");
+  const [cardExpiry, setCardExpiry] = useState("");
+  const [cardCvv, setCardCvv] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const order = mockOrders.find((o) => o.code === code) || mockOrders[1];
+  const clinic = mockClinic;
+
+  const handlePay = async () => {
+    if (method === "cartao" && (!cardNumber || !cardName || !cardExpiry || !cardCvv)) {
+      toast.error("Preencha todos os dados do cartão");
+      return;
+    }
+    setLoading(true);
+    await new Promise((r) => setTimeout(r, 2000));
+    setLoading(false);
+    navigate(`/paciente/pedido/${code}/sucesso`);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-black text-white">
+        <div className="max-w-2xl mx-auto px-4 py-5">
+          <button
+            onClick={() => navigate(`/paciente/pedido/${code}`)}
+            className="flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors mb-3 text-sm"
+          >
+            <ArrowLeft className="w-4 h-4" /> Voltar
+          </button>
+          <p className="text-white" style={{ fontWeight: 700, fontSize: "1.125rem" }}>{clinic.name}</p>
+          <p className="text-gray-400 text-sm">Pagamento seguro</p>
+        </div>
+      </header>
+
+      <div className="max-w-2xl mx-auto px-4 py-6">
+        {/* Order summary */}
+        <div className="bg-white border border-gray-200 rounded-xl p-5 mb-4">
+          <p className="text-xs text-gray-400 uppercase tracking-wider mb-3" style={{ fontWeight: 600 }}>
+            Resumo do pedido
+          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-black" style={{ fontWeight: 600 }}>{order.code}</p>
+              <p className="text-gray-500 text-sm">{order.items[0]?.name} · {order.items[0]?.quantity}x</p>
+            </div>
+            <p className="text-black" style={{ fontWeight: 800, fontSize: "1.5rem", letterSpacing: "-0.04em" }}>
+              {formatCurrency(order.finalPrice)}
+            </p>
+          </div>
+        </div>
+
+        {/* Payment method */}
+        <div className="bg-white border border-gray-200 rounded-xl p-5 mb-4">
+          <p className="text-xs text-gray-400 uppercase tracking-wider mb-3" style={{ fontWeight: 600 }}>
+            Forma de pagamento
+          </p>
+          <div className="grid grid-cols-3 gap-2 mb-4">
+            {[
+              { id: "pix" as Method, icon: Smartphone, label: "PIX" },
+              { id: "cartao" as Method, icon: CreditCard, label: "Cartão" },
+              { id: "boleto" as Method, icon: null, label: "Boleto" },
+            ].map(({ id, icon: Icon, label }) => (
+              <button
+                key={id}
+                onClick={() => setMethod(id)}
+                className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border transition-all ${
+                  method === id ? "border-black bg-gray-50" : "border-gray-200 hover:border-gray-400"
+                }`}
+              >
+                {Icon && <Icon className="w-4 h-4 text-gray-600" />}
+                {!Icon && <span className="text-gray-600 text-sm">📄</span>}
+                <span className="text-xs" style={{ fontWeight: method === id ? 600 : 400 }}>
+                  {label}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          {/* PIX */}
+          {method === "pix" && (
+            <div className="text-center border border-gray-200 rounded-lg p-6">
+              <div className="w-32 h-32 bg-gray-100 rounded-lg mx-auto mb-4 flex items-center justify-center border-2 border-gray-200">
+                <div className="grid grid-cols-4 gap-0.5">
+                  {Array.from({ length: 16 }).map((_, i) => (
+                    <div key={i} className={`w-3 h-3 rounded-sm ${Math.random() > 0.5 ? "bg-black" : "bg-white"}`} />
+                  ))}
+                </div>
+              </div>
+              <p className="text-sm text-black mb-2" style={{ fontWeight: 600 }}>Escaneie o QR Code</p>
+              <p className="text-gray-400 text-xs mb-3">ou copie a chave PIX abaixo</p>
+              <div className="bg-gray-50 border border-gray-200 rounded-md p-2.5 flex items-center gap-2 text-left">
+                <span className="flex-1 text-xs text-gray-500 truncate font-mono">
+                  00020126580014br.gov.bcb.pix013600...fastinbox
+                </span>
+                <button
+                  className="text-xs bg-black text-white px-2 py-1 rounded flex-shrink-0"
+                  onClick={() => toast.success("Chave PIX copiada!")}
+                  style={{ fontWeight: 500 }}
+                >
+                  Copiar
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Cartão */}
+          {method === "cartao" && (
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs text-gray-500 mb-1" style={{ fontWeight: 500 }}>
+                  Número do cartão
+                </label>
+                <input
+                  value={cardNumber}
+                  onChange={(e) => setCardNumber(e.target.value.replace(/\D/g, "").replace(/(.{4})/g, "$1 ").trim())}
+                  placeholder="0000 0000 0000 0000"
+                  maxLength={19}
+                  className="w-full border border-gray-200 rounded-md px-3.5 py-2.5 text-sm focus:outline-none focus:border-black font-mono"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-gray-500 mb-1" style={{ fontWeight: 500 }}>
+                  Nome no cartão
+                </label>
+                <input
+                  value={cardName}
+                  onChange={(e) => setCardName(e.target.value.toUpperCase())}
+                  placeholder="NOME COMO NO CARTÃO"
+                  className="w-full border border-gray-200 rounded-md px-3.5 py-2.5 text-sm focus:outline-none focus:border-black uppercase"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1" style={{ fontWeight: 500 }}>
+                    Validade
+                  </label>
+                  <input
+                    value={cardExpiry}
+                    onChange={(e) => setCardExpiry(e.target.value)}
+                    placeholder="MM/AA"
+                    maxLength={5}
+                    className="w-full border border-gray-200 rounded-md px-3.5 py-2.5 text-sm focus:outline-none focus:border-black"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1" style={{ fontWeight: 500 }}>
+                    CVV
+                  </label>
+                  <input
+                    value={cardCvv}
+                    onChange={(e) => setCardCvv(e.target.value)}
+                    placeholder="000"
+                    maxLength={4}
+                    type="password"
+                    className="w-full border border-gray-200 rounded-md px-3.5 py-2.5 text-sm focus:outline-none focus:border-black"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Boleto */}
+          {method === "boleto" && (
+            <div className="border border-gray-200 rounded-lg p-5 text-center">
+              <p className="text-black mb-2" style={{ fontWeight: 600 }}>Boleto bancário</p>
+              <p className="text-gray-500 text-sm mb-3">
+                O boleto vence em <strong>3 dias úteis</strong>. Após o pagamento, aguarde até 2 dias para confirmação.
+              </p>
+              <div className="bg-gray-50 border border-dashed border-gray-300 rounded-md p-3 text-gray-400 text-xs font-mono">
+                3458.90000 1/04 00035.701 63 00000-0 1 103900000022000
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Security + Pay */}
+        <div className="flex items-center gap-2 justify-center mb-4">
+          <Lock className="w-3.5 h-3.5 text-gray-400" />
+          <p className="text-xs text-gray-400">Pagamento 100% seguro com criptografia SSL</p>
+        </div>
+
+        <button
+          onClick={handlePay}
+          disabled={loading}
+          className="w-full bg-black text-white py-4 rounded-xl text-sm hover:bg-gray-900 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+          style={{ fontWeight: 700, fontSize: "1rem" }}
+        >
+          {loading ? (
+            <>Processando pagamento...</>
+          ) : (
+            <>
+              <Check className="w-4 h-4" />
+              Pagar {formatCurrency(order.finalPrice)}
+            </>
+          )}
+        </button>
+
+        <p className="text-center text-gray-300 text-xs mt-4">
+          Tecnologia FastInBox · Plataforma white label
+        </p>
+      </div>
+    </div>
+  );
+}
