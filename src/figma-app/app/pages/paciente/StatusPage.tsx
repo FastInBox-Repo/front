@@ -140,7 +140,7 @@ export default function StatusPage() {
         </div>
 
         <p className="text-center text-gray-300 text-xs mt-6">
-          Tecnologia FastInBox · Plataforma white label
+          FastInBox · Acompanhe cada etapa do seu pedido
         </p>
       </div>
     </div>

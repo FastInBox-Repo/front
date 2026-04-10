@@ -115,11 +115,11 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gray-50 flex">
       {/* Left panel */}
       <div className="hidden lg:flex lg:w-1/2 bg-black flex-col p-12">
-        <div className="flex items-center gap-2.5 mb-auto">
-          <div className="w-8 h-8 bg-white rounded-sm flex items-center justify-center">
-            <Box className="w-4 h-4 text-black" />
+        <div className="flex items-center gap-3.5 mb-auto">
+          <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-white">
+            <Box className="h-[18px] w-[18px] text-black" />
           </div>
-          <span className="text-white" style={{ fontWeight: 800, letterSpacing: "-0.04em", fontSize: "1.1rem" }}>
+          <span className="text-white leading-none" style={{ fontWeight: 800, letterSpacing: "-0.03em", fontSize: "1.1rem" }}>
             FastInBox
           </span>
         </div>
@@ -154,11 +154,11 @@ export default function LoginPage() {
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
         <div className="w-full max-w-md">
           {/* Mobile logo */}
-          <div className="flex items-center gap-2 mb-8 lg:hidden">
-            <div className="w-8 h-8 bg-black rounded-sm flex items-center justify-center">
-              <Box className="w-4 h-4 text-white" />
+          <div className="flex items-center gap-3 mb-8 lg:hidden">
+            <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-black">
+              <Box className="h-[18px] w-[18px] text-white" />
             </div>
-            <span style={{ fontWeight: 800, letterSpacing: "-0.04em" }}>FastInBox</span>
+            <span className="leading-none" style={{ fontWeight: 800, letterSpacing: "-0.03em" }}>FastInBox</span>
           </div>
 
           <div className="mb-8">
@@ -168,7 +168,7 @@ export default function LoginPage() {
             <p className="text-gray-500 text-sm">
               {mode === "login"
                 ? "Selecione seu perfil e faça login"
-                : "Cadastro rápido para iniciar a Sprint 1"}
+                : "Cadastro rápido para começar"}
             </p>
           </div>
 
@@ -347,7 +347,7 @@ export default function LoginPage() {
                   <div className="w-full border-t border-gray-200" />
                 </div>
                 <div className="relative flex justify-center text-xs text-gray-400 bg-gray-50 px-2">
-                  ou acesso rápido (demo)
+                  ou entrada rápida
                 </div>
               </div>
 
@@ -357,7 +357,7 @@ export default function LoginPage() {
                 className="w-full border border-gray-200 text-gray-700 py-2.5 rounded-md text-sm hover:border-black transition-colors disabled:opacity-50"
                 style={{ fontWeight: 500 }}
               >
-                {loading ? "Redirecionando..." : `Entrar como ${roleConfig[role].label} (demo)`}
+                {loading ? "Redirecionando..." : `Entrar como ${roleConfig[role].label}`}
               </button>
             </>
           )}

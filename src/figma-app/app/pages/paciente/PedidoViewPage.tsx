@@ -229,7 +229,7 @@ export default function PedidoViewPage() {
         </div>
 
         <p className="text-center text-gray-300 text-xs mt-6">
-          Tecnologia FastInBox · Plataforma white label
+          FastInBox · Pedido acompanhado em tempo real
         </p>
       </div>
     </div>

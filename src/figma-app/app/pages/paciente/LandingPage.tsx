@@ -49,11 +49,11 @@ export default function LandingPage() {
       <div className="min-h-screen bg-gray-50">
         <header className="bg-white border-b border-gray-100">
           <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 bg-black rounded-sm flex items-center justify-center">
-                <Box className="w-3.5 h-3.5 text-white" />
+            <div className="flex items-center gap-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-black">
+                <Box className="h-4 w-4 text-white" />
               </div>
-              <span style={{ fontWeight: 800, letterSpacing: "-0.04em" }}>FastInBox</span>
+              <span className="leading-none" style={{ fontWeight: 800, letterSpacing: "-0.03em" }}>FastInBox</span>
             </div>
             <button
               onClick={() => {
@@ -130,11 +130,11 @@ export default function LandingPage() {
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-black rounded-sm flex items-center justify-center">
-              <Box className="w-3.5 h-3.5 text-white" />
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-black">
+              <Box className="h-4 w-4 text-white" />
             </div>
-            <span style={{ fontWeight: 800, letterSpacing: "-0.04em" }}>FastInBox</span>
+            <span className="leading-none" style={{ fontWeight: 800, letterSpacing: "-0.03em" }}>FastInBox</span>
           </div>
           <button
             onClick={() => navigate("/login?role=nutricionista")}
@@ -186,7 +186,7 @@ export default function LandingPage() {
       </div>
 
       <footer className="text-center py-8 border-t border-gray-100">
-        <p className="text-gray-400 text-xs">Tecnologia FastInBox · Plataforma white label para nutricionistas</p>
+        <p className="text-gray-400 text-xs">FastInBox · Acompanhamento simples para seu pedido</p>
       </footer>
     </div>
   );

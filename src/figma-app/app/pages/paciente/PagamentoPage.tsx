@@ -228,7 +228,7 @@ export default function PagamentoPage() {
         </button>
 
         <p className="text-center text-gray-300 text-xs mt-4">
-          Tecnologia FastInBox · Plataforma white label
+          FastInBox · Pagamento simples e seguro
         </p>
       </div>
     </div>

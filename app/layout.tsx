@@ -22,7 +22,7 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   title: "FastInBox",
-  description: "FastInBox SaaS MVP",
+  description: "FastInBox para clínicas e nutricionistas venderem marmitas personalizadas com sua própria marca.",
 };
 
 export default function RootLayout({
