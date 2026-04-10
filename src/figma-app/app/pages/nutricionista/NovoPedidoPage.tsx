@@ -1,24 +1,11 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { Plus, X, ChevronDown, Info, ArrowRight, Copy, Check } from "lucide-react";
-import { mockPatients, formatCurrency } from "../../data/mockData";
+import { MarmitaItem, formatCurrency } from "../../data/mockData";
 import { toast } from "sonner";
+import { sprintStoreActions, useSprintSession } from "../../data/sprintStore";
 
-interface IngredientEntry {
-  id: string;
-  name: string;
-  quantity: string;
-  category: string;
-}
-
-interface MarmitaItem {
-  id: string;
-  name: string;
-  quantity: number;
-  ingredients: IngredientEntry[];
-  packaging: string;
-  observations: string;
-}
+type IngredientEntry = MarmitaItem["ingredients"][number];
 
 const categories = ["proteina", "carboidrato", "vegetal", "gordura", "tempero"];
 const packagingOptions = [
@@ -35,10 +22,13 @@ const STEP_LABELS = ["Paciente", "Marmitas", "Preços", "Revisão"];
 export default function NovoPedidoPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { patients, users, clinic, currentUser } = useSprintSession();
   const preselectedPatient = searchParams.get("paciente") || "";
+  const factoryUsers = users.filter((user) => user.role === "cozinha");
 
   const [step, setStep] = useState(0);
   const [selectedPatientId, setSelectedPatientId] = useState(preselectedPatient);
+  const [selectedFactoryId, setSelectedFactoryId] = useState(factoryUsers[0]?.id || "");
   const [deliveryDate, setDeliveryDate] = useState("");
   const [nutritionalObservations, setNutritionalObservations] = useState("");
   const [allowEditing, setAllowEditing] = useState(false);
@@ -54,12 +44,14 @@ export default function NovoPedidoPage() {
   ]);
   const [basePrice, setBasePrice] = useState(0);
   const [margin, setMargin] = useState(0);
+  const [createdOrderId, setCreatedOrderId] = useState("");
   const [generatedCode, setGeneratedCode] = useState("");
   const [copied, setCopied] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const finalPrice = basePrice + margin;
-  const selectedPatient = mockPatients.find((p) => p.id === selectedPatientId);
+  const selectedPatient = patients.find((p) => p.id === selectedPatientId);
+  const selectedFactory = factoryUsers.find((factory) => factory.id === selectedFactoryId);
 
   const addItem = () => {
     setItems((prev) => [
@@ -129,6 +121,10 @@ export default function NovoPedidoPage() {
       toast.error("Selecione um paciente");
       return;
     }
+    if (step === 0 && !selectedFactoryId) {
+      toast.error("Selecione uma fábrica");
+      return;
+    }
     if (step === 1) {
       const invalid = items.some((it) => !it.name || it.ingredients.some((ig) => !ig.name));
       if (invalid) {
@@ -144,13 +140,34 @@ export default function NovoPedidoPage() {
   };
 
   const handleSubmit = async () => {
+    if (!currentUser) {
+      toast.error("Faça login para criar o pedido");
+      navigate("/login?role=nutricionista");
+      return;
+    }
+
     setSubmitting(true);
     await new Promise((r) => setTimeout(r, 1200));
-    const code = `FIB-2026-${String(Math.floor(Math.random() * 900) + 100)}`;
-    setGeneratedCode(code);
+    const createdOrder = sprintStoreActions.createOrder({
+      patientId: selectedPatientId,
+      nutritionistId: currentUser.id,
+      nutritionistName: currentUser.name,
+      clinicName: currentUser.clinicName || clinic.name,
+      items,
+      basePrice,
+      finalPrice,
+      margin,
+      deliveryDate,
+      nutritionalObservations,
+      allowEditing,
+      factoryId: selectedFactoryId,
+      factoryName: selectedFactory?.name,
+    });
+    setCreatedOrderId(createdOrder.id);
+    setGeneratedCode(createdOrder.code);
     setSubmitting(false);
     setStep(4);
-    toast.success("Pedido criado com sucesso!");
+    toast.success("Pedido criado e enviado para a fábrica!");
   };
 
   const handleCopy = () => {
@@ -208,7 +225,7 @@ export default function NovoPedidoPage() {
               <div>
                 <h2 style={{ fontWeight: 600, marginBottom: "1rem" }}>Selecionar paciente</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
-                  {mockPatients.map((p) => (
+                  {patients.map((p) => (
                     <div
                       key={p.id}
                       onClick={() => setSelectedPatientId(p.id)}
@@ -250,6 +267,25 @@ export default function NovoPedidoPage() {
                       onChange={(e) => setDeliveryDate(e.target.value)}
                       className="w-full border border-gray-200 rounded-md px-3.5 py-2.5 text-sm focus:outline-none focus:border-black"
                     />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-700 mb-1.5" style={{ fontWeight: 500 }}>
+                      Fábrica responsável
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={selectedFactoryId}
+                        onChange={(e) => setSelectedFactoryId(e.target.value)}
+                        className="w-full appearance-none border border-gray-200 rounded-md px-3.5 py-2.5 text-sm focus:outline-none focus:border-black bg-white pr-8"
+                      >
+                        {factoryUsers.map((factory) => (
+                          <option key={factory.id} value={factory.id}>
+                            {factory.name}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                    </div>
                   </div>
                   <div className="flex items-center gap-3 pt-7">
                     <button
@@ -489,6 +525,9 @@ export default function NovoPedidoPage() {
                         Entrega: {deliveryDate.split("-").reverse().join("/")}
                       </p>
                     )}
+                    <p className="text-gray-500 text-sm mt-1">
+                      Fábrica: {selectedFactory?.name || "Não definida"}
+                    </p>
                   </div>
                   <div className="border border-gray-200 rounded-lg p-4">
                     <p className="text-xs text-gray-400 uppercase tracking-wider mb-2" style={{ fontWeight: 600 }}>
@@ -568,7 +607,7 @@ export default function NovoPedidoPage() {
                 className="flex items-center gap-2 bg-black text-white px-6 py-2.5 rounded-md text-sm hover:bg-gray-900 transition-colors disabled:opacity-50"
                 style={{ fontWeight: 600 }}
               >
-                {submitting ? "Criando pedido..." : "Criar pedido e gerar link"}
+                {submitting ? "Enviando para a fábrica..." : "Criar pedido e enviar para fábrica"}
               </button>
             )}
           </div>
@@ -585,7 +624,7 @@ export default function NovoPedidoPage() {
             Pedido criado!
           </h2>
           <p className="text-gray-500 text-sm mb-6">
-            Compartilhe o código ou link abaixo com {selectedPatient?.name || "o paciente"} para que ele revise, confirme e pague o pedido.
+            Pedido enviado para {selectedFactory?.name || "fábrica"}. Compartilhe o código com {selectedPatient?.name || "o paciente"} para acompanhamento.
           </p>
 
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
@@ -611,11 +650,11 @@ export default function NovoPedidoPage() {
 
           <div className="flex gap-3">
             <button
-              onClick={() => navigate(`/paciente/pedido/${generatedCode}`)}
+              onClick={() => navigate(createdOrderId ? `/nutricionista/pedidos/${createdOrderId}` : "/nutricionista/dashboard")}
               className="flex-1 border border-gray-200 text-gray-700 py-2.5 rounded-md text-sm hover:border-black transition-colors"
               style={{ fontWeight: 500 }}
             >
-              Prévia do paciente
+              Ver resumo
             </button>
             <button
               onClick={() => navigate("/nutricionista/dashboard")}

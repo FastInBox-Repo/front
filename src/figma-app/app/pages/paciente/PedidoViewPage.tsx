@@ -1,8 +1,9 @@
 import { useParams, useNavigate } from "react-router";
 import { ArrowLeft, MapPin, Phone, CheckCircle, Edit3, Lock, ChevronRight } from "lucide-react";
-import { mockOrders, mockClinic, formatCurrency, formatDate, statusLabels } from "../../data/mockData";
+import { formatCurrency, formatDate, statusLabels } from "../../data/mockData";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useSprintSession } from "../../data/sprintStore";
 
 const categoryColors: Record<string, string> = {
   proteina: "bg-gray-900 text-white",
@@ -17,9 +18,26 @@ export default function PedidoViewPage() {
   const navigate = useNavigate();
   const [editMode, setEditMode] = useState(false);
   const [notes, setNotes] = useState("");
+  const { orders, clinic } = useSprintSession();
 
-  const order = mockOrders.find((o) => o.code === code) || mockOrders[1];
-  const clinic = mockClinic;
+  const order = orders.find((o) => o.code === code);
+
+  if (!order) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="bg-white border border-gray-200 rounded-xl p-6 text-center">
+          <p className="text-gray-500 text-sm mb-3">Pedido não encontrado.</p>
+          <button
+            onClick={() => navigate("/paciente")}
+            className="bg-black text-white px-4 py-2 rounded-md text-sm"
+            style={{ fontWeight: 600 }}
+          >
+            Voltar
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const canPay = order.status === "aguardando_pagamento" || order.status === "aguardando_confirmacao";
   const isPaid = ["pago", "em_producao", "pronto", "em_entrega", "entregue"].includes(order.status);

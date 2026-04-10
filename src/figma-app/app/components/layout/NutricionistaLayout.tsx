@@ -8,8 +8,8 @@ import {
   ChevronDown,
   Box,
 } from "lucide-react";
-import { mockClinic } from "../../data/mockData";
 import { useState } from "react";
+import { sprintStoreActions, useSprintSession } from "../../data/sprintStore";
 
 const navItems = [
   { to: "/nutricionista/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -21,6 +21,11 @@ const navItems = [
 export default function NutricionistaLayout() {
   const navigate = useNavigate();
   const [profileOpen, setProfileOpen] = useState(false);
+  const { clinic, currentUser } = useSprintSession();
+
+  const nutritionistName = currentUser?.name || clinic.nutritionistName;
+  const nutritionistCRN = currentUser?.nutritionistCRN || clinic.nutritionistCRN;
+  const clinicName = currentUser?.clinicName || clinic.name;
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
@@ -45,7 +50,7 @@ export default function NutricionistaLayout() {
         <div className="px-6 py-4 border-b border-gray-800">
           <p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Clínica</p>
           <p className="text-white text-sm" style={{ fontWeight: 500 }}>
-            {mockClinic.name}
+            {clinicName}
           </p>
         </div>
 
@@ -77,19 +82,22 @@ export default function NutricionistaLayout() {
           >
             <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center flex-shrink-0">
               <span className="text-white text-xs" style={{ fontWeight: 600 }}>
-                {mockClinic.nutritionistName.split(" ").map((w) => w[0]).slice(0, 2).join("")}
+                {nutritionistName.split(" ").map((w) => w[0]).slice(0, 2).join("")}
               </span>
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-white text-xs truncate" style={{ fontWeight: 500 }}>
-                {mockClinic.nutritionistName}
+                {nutritionistName}
               </p>
-              <p className="text-gray-500 text-xs">{mockClinic.nutritionistCRN}</p>
+              <p className="text-gray-500 text-xs">{nutritionistCRN}</p>
             </div>
             <ChevronDown className="w-3.5 h-3.5 text-gray-500" />
           </div>
           <button
-            onClick={() => navigate("/login")}
+            onClick={() => {
+              sprintStoreActions.logout();
+              navigate("/login?role=nutricionista");
+            }}
             className="mt-1 flex items-center gap-3 px-3 py-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 transition-colors text-sm w-full"
           >
             <LogOut className="w-4 h-4" />

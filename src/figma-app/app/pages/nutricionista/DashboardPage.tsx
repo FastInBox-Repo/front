@@ -3,7 +3,8 @@ import {
   Users, ShoppingBag, Clock, CheckCircle, ChefHat,
   Plus, ArrowRight, TrendingUp, Package
 } from "lucide-react";
-import { mockOrders, mockPatients, statusLabels, formatCurrency, formatDate } from "../../data/mockData";
+import { formatCurrency, formatDate, statusLabels } from "../../data/mockData";
+import { useSprintSession } from "../../data/sprintStore";
 
 const StatusBadge = ({ status }: { status: string }) => {
   const styles: Record<string, string> = {
@@ -26,48 +27,60 @@ const StatusBadge = ({ status }: { status: string }) => {
 
 export default function DashboardPage() {
   const navigate = useNavigate();
+  const { orders, patients, currentUser } = useSprintSession();
+
+  const nutritionistOrders = orders.filter(
+    (order) => order.nutritionistId === currentUser?.id || order.nutritionistName === currentUser?.name,
+  );
+
+  const visiblePatients =
+    nutritionistOrders.length > 0
+      ? patients.filter((patient) => nutritionistOrders.some((order) => order.patientId === patient.id))
+      : patients;
 
   const metrics = [
     {
       icon: Users,
       label: "Total de pacientes",
-      value: mockPatients.length,
+      value: visiblePatients.length,
       sub: "+2 este mês",
     },
     {
       icon: ShoppingBag,
       label: "Rascunhos",
-      value: mockOrders.filter((o) => o.status === "rascunho").length,
+      value: nutritionistOrders.filter((o) => o.status === "rascunho").length,
       sub: "Aguardando envio",
     },
     {
       icon: Clock,
       label: "Aguard. pagamento",
-      value: mockOrders.filter((o) => o.status === "aguardando_pagamento" || o.status === "aguardando_confirmacao").length,
+      value: nutritionistOrders.filter((o) => o.status === "aguardando_pagamento" || o.status === "aguardando_confirmacao").length,
       sub: "Pendentes",
     },
     {
       icon: CheckCircle,
       label: "Pagos",
-      value: mockOrders.filter((o) => o.status === "pago" || o.status === "em_producao" || o.status === "pronto" || o.status === "em_entrega" || o.status === "entregue").length,
+      value: nutritionistOrders.filter((o) => o.status === "pago" || o.status === "em_producao" || o.status === "pronto" || o.status === "em_entrega" || o.status === "entregue").length,
       sub: "Confirmados",
     },
     {
       icon: ChefHat,
       label: "Em produção",
-      value: mockOrders.filter((o) => o.status === "em_producao").length,
+      value: nutritionistOrders.filter((o) => o.status === "em_producao").length,
       sub: "Na cozinha agora",
     },
     {
       icon: TrendingUp,
       label: "Faturamento",
-      value: formatCurrency(mockOrders.filter((o) => o.paidAt).reduce((acc, o) => acc + o.finalPrice, 0)),
+      value: formatCurrency(nutritionistOrders.filter((o) => o.paidAt).reduce((acc, o) => acc + o.finalPrice, 0)),
       sub: "Total pago",
       isText: true,
     },
   ];
 
-  const recentOrders = [...mockOrders].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 5);
+  const recentOrders = [...nutritionistOrders]
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+    .slice(0, 5);
 
   return (
     <div className="p-8">
@@ -186,7 +199,7 @@ export default function DashboardPage() {
               </button>
             </div>
             <div className="divide-y divide-gray-50">
-              {mockPatients.slice(0, 4).map((p) => (
+              {visiblePatients.slice(0, 4).map((p) => (
                 <div key={p.id} className="px-6 py-3 flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
                     <div className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center">

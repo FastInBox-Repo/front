@@ -1,8 +1,9 @@
 import { useParams, useNavigate } from "react-router";
 import { ArrowLeft, Copy, Check, ExternalLink } from "lucide-react";
-import { mockOrders, statusLabels, formatCurrency, formatDate } from "../../data/mockData";
+import { statusLabels, formatCurrency, formatDate } from "../../data/mockData";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useSprintSession } from "../../data/sprintStore";
 
 const StatusBadge = ({ status }: { status: string }) => {
   const styles: Record<string, string> = {
@@ -27,8 +28,17 @@ export default function PedidoResumoPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
+  const { orders } = useSprintSession();
 
-  const order = mockOrders.find((o) => o.id === id) || mockOrders[0];
+  const order = orders.find((o) => o.id === id) || orders[0];
+
+  if (!order) {
+    return (
+      <div className="p-8">
+        <p className="text-gray-500 text-sm">Nenhum pedido encontrado.</p>
+      </div>
+    );
+  }
 
   const handleCopy = () => {
     navigator.clipboard.writeText(`${window.location.origin}/paciente/pedido/${order.code}`);

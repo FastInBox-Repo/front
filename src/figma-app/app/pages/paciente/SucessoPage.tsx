@@ -1,12 +1,30 @@
 import { useParams, useNavigate } from "react-router";
 import { CheckCircle, ChevronRight, Download } from "lucide-react";
-import { mockOrders, mockClinic, formatCurrency } from "../../data/mockData";
+import { formatCurrency } from "../../data/mockData";
+import { useSprintSession } from "../../data/sprintStore";
 
 export default function SucessoPage() {
   const { code } = useParams();
   const navigate = useNavigate();
-  const order = mockOrders.find((o) => o.code === code) || mockOrders[0];
-  const clinic = mockClinic;
+  const { orders, clinic } = useSprintSession();
+  const order = orders.find((o) => o.code === code);
+
+  if (!order) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="bg-white border border-gray-200 rounded-xl p-6 text-center">
+          <p className="text-gray-500 text-sm mb-3">Pedido não encontrado.</p>
+          <button
+            onClick={() => navigate("/paciente")}
+            className="bg-black text-white px-4 py-2 rounded-md text-sm"
+            style={{ fontWeight: 600 }}
+          >
+            Voltar
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 py-12">

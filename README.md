@@ -55,6 +55,23 @@ npm run lint
 - Backend esperado: `http://localhost:4001`
 - Proxy local previsto: `/backend/*`
 
+## Sprint 1 - Deploy unico na Vercel
+
+Nesta Sprint 1, o fluxo principal roda em um unico deploy do `front`, sem banco externo e sem servicos adicionais:
+
+- autenticacao/cadastro por perfil com persistencia local (`localStorage`)
+- cadastro de paciente e criacao de pedido vinculada ao nutricionista
+- envio para fabrica e kanban de acompanhamento
+- dashboard do paciente em cards com status de fabricacao
+
+Deploy recomendado:
+
+```bash
+vercel
+```
+
+Observacao: os dados persistem por navegador (escopo demo/MVP academico).
+
 ## Principios de implementacao
 
 - menor diff possivel e sem quebra de comportamento existente

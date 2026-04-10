@@ -1,5 +1,6 @@
 import { Outlet, NavLink, useNavigate } from "react-router";
 import { LayoutDashboard, Users, ShoppingBag, Settings, LogOut, Box } from "lucide-react";
+import { sprintStoreActions } from "../../data/sprintStore";
 
 const navItems = [
   { to: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -45,7 +46,10 @@ export default function AdminLayout() {
 
         <div className="px-3 py-4 border-t border-gray-800">
           <button
-            onClick={() => navigate("/login")}
+            onClick={() => {
+              sprintStoreActions.logout();
+              navigate("/login");
+            }}
             className="flex items-center gap-3 px-3 py-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 transition-colors text-sm w-full"
           >
             <LogOut className="w-4 h-4" />

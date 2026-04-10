@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Plus, Search, X, ChevronRight } from "lucide-react";
-import { mockPatients, Patient, formatDate } from "../../data/mockData";
+import { Patient, formatDate } from "../../data/mockData";
 import { toast } from "sonner";
+import { sprintStoreActions, useSprintSession } from "../../data/sprintStore";
 
 const EMPTY_PATIENT: Omit<Patient, "id" | "createdAt" | "ordersCount"> = {
   name: "",
@@ -16,10 +17,10 @@ const EMPTY_PATIENT: Omit<Patient, "id" | "createdAt" | "ordersCount"> = {
 
 export default function PacientesPage() {
   const navigate = useNavigate();
+  const { patients } = useSprintSession();
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState(EMPTY_PATIENT);
-  const [patients, setPatients] = useState(mockPatients);
   const [loading, setLoading] = useState(false);
 
   const filtered = patients.filter(
@@ -37,13 +38,9 @@ export default function PacientesPage() {
     setLoading(true);
     await new Promise((r) => setTimeout(r, 800));
     setLoading(false);
-    const newPatient: Patient = {
+    sprintStoreActions.createPatient({
       ...form,
-      id: `p${Date.now()}`,
-      createdAt: new Date().toISOString().split("T")[0],
-      ordersCount: 0,
-    };
-    setPatients((prev) => [newPatient, ...prev]);
+    });
     setShowModal(false);
     setForm(EMPTY_PATIENT);
     toast.success("Paciente cadastrado com sucesso!");

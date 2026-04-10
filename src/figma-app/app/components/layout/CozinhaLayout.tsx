@@ -1,5 +1,6 @@
 import { Outlet, NavLink, useNavigate } from "react-router";
 import { ChefHat, List, LogOut, Box } from "lucide-react";
+import { sprintStoreActions, useSprintSession } from "../../data/sprintStore";
 
 const navItems = [
   { to: "/cozinha/dashboard", icon: List, label: "Pedidos" },
@@ -7,6 +8,7 @@ const navItems = [
 
 export default function CozinhaLayout() {
   const navigate = useNavigate();
+  const { currentUser } = useSprintSession();
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
@@ -18,7 +20,7 @@ export default function CozinhaLayout() {
             </div>
             <div>
               <p className="text-white text-sm" style={{ fontWeight: 700 }}>FastInBox</p>
-              <p className="text-gray-500 text-xs">Cozinha</p>
+              <p className="text-gray-500 text-xs">Fábrica</p>
             </div>
           </div>
         </div>
@@ -26,7 +28,7 @@ export default function CozinhaLayout() {
         <div className="px-6 py-4 border-b border-gray-800">
           <div className="flex items-center gap-2">
             <ChefHat className="w-4 h-4 text-gray-400" />
-            <p className="text-gray-400 text-sm">Painel da Cozinha</p>
+            <p className="text-gray-400 text-sm">{currentUser?.name || "Painel da Fábrica"}</p>
           </div>
         </div>
 
@@ -49,7 +51,10 @@ export default function CozinhaLayout() {
 
         <div className="px-3 py-4 border-t border-gray-800">
           <button
-            onClick={() => navigate("/cozinha/login")}
+            onClick={() => {
+              sprintStoreActions.logout();
+              navigate("/login?role=cozinha");
+            }}
             className="flex items-center gap-3 px-3 py-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 transition-colors text-sm w-full"
           >
             <LogOut className="w-4 h-4" />

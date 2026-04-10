@@ -1,8 +1,9 @@
 import { useParams, useNavigate } from "react-router";
 import { ArrowLeft, Lock, CreditCard, Smartphone, Check } from "lucide-react";
-import { mockOrders, mockClinic, formatCurrency } from "../../data/mockData";
+import { formatCurrency } from "../../data/mockData";
 import { useState } from "react";
 import { toast } from "sonner";
+import { sprintStoreActions, useSprintSession } from "../../data/sprintStore";
 
 type Method = "pix" | "cartao" | "boleto";
 
@@ -15,9 +16,26 @@ export default function PagamentoPage() {
   const [cardExpiry, setCardExpiry] = useState("");
   const [cardCvv, setCardCvv] = useState("");
   const [loading, setLoading] = useState(false);
+  const { orders, clinic } = useSprintSession();
 
-  const order = mockOrders.find((o) => o.code === code) || mockOrders[1];
-  const clinic = mockClinic;
+  const order = orders.find((o) => o.code === code);
+
+  if (!order) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="bg-white border border-gray-200 rounded-xl p-6 text-center">
+          <p className="text-gray-500 text-sm mb-3">Pedido não encontrado.</p>
+          <button
+            onClick={() => navigate("/paciente")}
+            className="bg-black text-white px-4 py-2 rounded-md text-sm"
+            style={{ fontWeight: 600 }}
+          >
+            Voltar
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const handlePay = async () => {
     if (method === "cartao" && (!cardNumber || !cardName || !cardExpiry || !cardCvv)) {
@@ -26,6 +44,7 @@ export default function PagamentoPage() {
     }
     setLoading(true);
     await new Promise((r) => setTimeout(r, 2000));
+    sprintStoreActions.markOrderAsPaid(code || "", method);
     setLoading(false);
     navigate(`/paciente/pedido/${code}/sucesso`);
   };

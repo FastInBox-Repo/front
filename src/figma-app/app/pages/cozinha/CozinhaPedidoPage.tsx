@@ -1,8 +1,9 @@
 import { useParams, useNavigate } from "react-router";
 import { ArrowLeft, ChevronRight } from "lucide-react";
-import { mockOrders, statusLabels, formatCurrency, formatDate, OrderStatus } from "../../data/mockData";
+import { statusLabels, formatCurrency, formatDate, OrderStatus } from "../../data/mockData";
 import { useState } from "react";
 import { toast } from "sonner";
+import { sprintStoreActions, useSprintSession } from "../../data/sprintStore";
 
 const NEXT_STATUS: Record<string, OrderStatus> = {
   pago: "em_producao",
@@ -30,14 +31,25 @@ export default function CozinhaPedidoPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [status, setStatus] = useState<OrderStatus | null>(null);
+  const { orders } = useSprintSession();
 
-  const order = mockOrders.find((o) => o.id === id) || mockOrders[0];
+  const order = orders.find((o) => o.id === id) || orders[0];
+
+  if (!order) {
+    return (
+      <div className="p-6">
+        <p className="text-gray-500 text-sm">Pedido não encontrado.</p>
+      </div>
+    );
+  }
+
   const currentStatus = status || order.status;
 
   const handleUpdate = () => {
     const next = NEXT_STATUS[currentStatus];
     if (!next) return;
     setStatus(next);
+    sprintStoreActions.updateOrderStatus(order.id, next);
     toast.success(NEXT_LABEL[currentStatus] + "!");
   };
 
