@@ -13,8 +13,8 @@ export default function AdminLayout() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
-      <aside className="w-64 bg-black flex flex-col flex-shrink-0">
+    <div className="flex h-screen bg-gray-50 overflow-hidden fi-page-shell">
+      <aside className="w-64 bg-black flex flex-col flex-shrink-0 fi-animate-in fi-delay-1">
         <div className="px-6 py-6 border-b border-gray-800">
           <button onClick={() => navigate("/")} className="flex items-center gap-3" aria-label="Ir para home FastInBox">
             <div className="w-8 h-8 bg-white rounded-sm flex items-center justify-center">
@@ -66,7 +66,7 @@ export default function AdminLayout() {
         </div>
       </aside>
 
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto fi-animate-in fi-delay-2">
         <Outlet />
       </main>
     </div>

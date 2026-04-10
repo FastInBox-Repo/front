@@ -151,3 +151,73 @@ section[class*="border"][class*="bg-white"],
 article[class*="border"][class*="bg-white"] {
   box-shadow: var(--brut-shadow-md);
 }
+
+@keyframes fiFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fiRiseIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fi-route-shell {
+    animation: fiFadeIn 280ms ease-out both;
+  }
+
+  .fi-page-shell {
+    animation: fiRiseIn 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .fi-animate-in {
+    opacity: 0;
+    animation: fiRiseIn 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .fi-delay-1 {
+    animation-delay: 70ms;
+  }
+
+  .fi-delay-2 {
+    animation-delay: 130ms;
+  }
+
+  .fi-delay-3 {
+    animation-delay: 190ms;
+  }
+
+  .fi-stagger > * {
+    opacity: 0;
+    animation: fiRiseIn 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .fi-stagger > *:nth-child(1) { animation-delay: 40ms; }
+  .fi-stagger > *:nth-child(2) { animation-delay: 90ms; }
+  .fi-stagger > *:nth-child(3) { animation-delay: 140ms; }
+  .fi-stagger > *:nth-child(4) { animation-delay: 190ms; }
+  .fi-stagger > *:nth-child(5) { animation-delay: 240ms; }
+  .fi-stagger > *:nth-child(6) { animation-delay: 290ms; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fi-route-shell,
+  .fi-page-shell,
+  .fi-animate-in,
+  .fi-stagger > * {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}

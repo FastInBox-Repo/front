@@ -73,9 +73,9 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white fi-page-shell">
       {/* Header */}
-      <header className="border-b border-gray-100 sticky top-0 bg-white z-50">
+      <header className="border-b border-gray-100 sticky top-0 bg-white z-50 fi-animate-in fi-delay-1">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <button
             onClick={() => navigate("/")}
@@ -116,7 +116,7 @@ export default function HomePage() {
       </header>
 
       {/* Hero */}
-      <section className="max-w-7xl mx-auto px-6 pt-24 pb-24">
+      <section className="max-w-7xl mx-auto px-6 pt-24 pb-24 fi-animate-in fi-delay-2">
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 bg-gray-100 rounded-full px-3 py-1 mb-8">
             <div className="w-1.5 h-1.5 bg-black rounded-full" />
@@ -175,7 +175,7 @@ export default function HomePage() {
       </section>
 
       {/* Stats bar */}
-      <section className="border-y border-gray-100 bg-gray-50">
+      <section className="border-y border-gray-100 bg-gray-50 fi-animate-in fi-delay-3">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
@@ -199,7 +199,7 @@ export default function HomePage() {
       </section>
 
       {/* Demo center */}
-      <section className="max-w-7xl mx-auto px-6 py-20">
+      <section className="max-w-7xl mx-auto px-6 py-20 fi-animate-in">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 border border-gray-200 rounded-xl p-6">
             <p className="text-gray-400 text-xs uppercase tracking-widest mb-2" style={{ fontWeight: 700 }}>
@@ -211,7 +211,7 @@ export default function HomePage() {
             <p className="text-gray-500 text-sm mb-5">
               Use estes atalhos para entrar direto em cada jornada com dados de demo e mostrar o fluxo ponta a ponta.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 fi-stagger">
               <button
                 onClick={() => handleDemoAccess("nutricionista", "/nutricionista/dashboard")}
                 className="border border-gray-200 rounded-lg px-4 py-3 text-left hover:border-black transition-colors"
@@ -278,7 +278,7 @@ export default function HomePage() {
       </section>
 
       {/* How it works */}
-      <section id="como-funciona" className="max-w-7xl mx-auto px-6 py-24">
+      <section id="como-funciona" className="max-w-7xl mx-auto px-6 py-24 fi-animate-in">
         <div className="mb-14">
           <p className="text-gray-400 text-sm uppercase tracking-widest mb-3" style={{ fontWeight: 600 }}>
             Fluxo
@@ -290,7 +290,7 @@ export default function HomePage() {
             Como funciona
           </h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 fi-stagger">
           {steps.map((step) => (
             <div
               key={step.num}
@@ -314,7 +314,7 @@ export default function HomePage() {
       </section>
 
       {/* Benefits */}
-      <section id="beneficios" className="bg-black">
+      <section id="beneficios" className="bg-black fi-animate-in">
         <div className="max-w-7xl mx-auto px-6 py-24">
           <div className="mb-14">
             <p className="text-gray-600 text-sm uppercase tracking-widest mb-3" style={{ fontWeight: 600 }}>
@@ -327,7 +327,7 @@ export default function HomePage() {
               Tudo que você precisa
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 fi-stagger">
             {benefits.map((b) => (
               <div
                 key={b.title}
@@ -347,7 +347,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="max-w-7xl mx-auto px-6 py-24">
+      <section className="max-w-7xl mx-auto px-6 py-24 fi-animate-in">
         <div className="border border-gray-200 rounded-xl p-12 text-center">
           <h2
             className="text-black mb-4"
@@ -385,7 +385,7 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-100">
+      <footer className="border-t border-gray-100 fi-animate-in">
         <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <button onClick={() => navigate("/")} className="flex items-center gap-2" aria-label="Voltar para o topo">
             <div className="w-6 h-6 bg-black rounded-sm flex items-center justify-center">

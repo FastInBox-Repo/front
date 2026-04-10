@@ -28,9 +28,9 @@ export default function NutricionistaLayout() {
   const clinicName = currentUser?.clinicName || clinic.name;
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
+    <div className="flex h-screen bg-gray-50 overflow-hidden fi-page-shell">
       {/* Sidebar */}
-      <aside className="w-64 bg-black flex flex-col flex-shrink-0">
+      <aside className="w-64 bg-black flex flex-col flex-shrink-0 fi-animate-in fi-delay-1">
         {/* Logo */}
         <div className="px-6 py-6 border-b border-gray-800">
           <button onClick={() => navigate("/")} className="flex items-center gap-3" aria-label="Ir para home FastInBox">
@@ -115,7 +115,7 @@ export default function NutricionistaLayout() {
       </aside>
 
       {/* Main */}
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto fi-animate-in fi-delay-2">
         <Outlet />
       </main>
     </div>
