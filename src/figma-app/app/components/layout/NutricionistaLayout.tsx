@@ -33,7 +33,7 @@ export default function NutricionistaLayout() {
       <aside className="w-64 bg-black flex flex-col flex-shrink-0">
         {/* Logo */}
         <div className="px-6 py-6 border-b border-gray-800">
-          <div className="flex items-center gap-3">
+          <button onClick={() => navigate("/")} className="flex items-center gap-3" aria-label="Ir para home FastInBox">
             <div className="w-8 h-8 bg-white rounded-sm flex items-center justify-center">
               <Box className="w-4 h-4 text-black" />
             </div>
@@ -43,7 +43,15 @@ export default function NutricionistaLayout() {
               </p>
               <p className="text-gray-500 text-xs">Nutricionista</p>
             </div>
-          </div>
+          </button>
+          <a
+            href="https://fastinbox-repo.github.io/docs/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 inline-flex text-xs text-gray-400 hover:text-white transition-colors"
+          >
+            Abrir documentação técnica
+          </a>
         </div>
 
         {/* Clinic info */}

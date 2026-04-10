@@ -1,5 +1,7 @@
+import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router";
-import { Box, ArrowRight, CheckCircle, Zap, ShieldCheck, Users, ChefHat, BarChart3 } from "lucide-react";
+import { Box, ArrowRight, CheckCircle, Zap, ShieldCheck, Users, ChefHat, BarChart3, ExternalLink, Search } from "lucide-react";
+import { AppRole, sprintStoreActions, useSprintSession } from "../../data/sprintStore";
 
 const benefits = [
   {
@@ -43,26 +45,64 @@ const steps = [
 
 export default function HomePage() {
   const navigate = useNavigate();
+  const { orders } = useSprintSession();
+  const [trackingCode, setTrackingCode] = useState("");
+  const [trackingError, setTrackingError] = useState("");
+
+  const handleDemoAccess = (role: AppRole, targetPath: string) => {
+    sprintStoreActions.demoLogin(role);
+    navigate(targetPath);
+  };
+
+  const handleTrackOrder = (event: FormEvent) => {
+    event.preventDefault();
+    const normalizedCode = trackingCode.trim().toUpperCase();
+    if (!normalizedCode) {
+      setTrackingError("Informe um código para consultar.");
+      return;
+    }
+
+    const order = orders.find((item) => item.code.toUpperCase() === normalizedCode);
+    if (!order) {
+      setTrackingError("Código não encontrado. Verifique e tente novamente.");
+      return;
+    }
+
+    setTrackingError("");
+    navigate(`/paciente/pedido/${order.code}/status`);
+  };
 
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
       <header className="border-b border-gray-100 sticky top-0 bg-white z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
+          <button
+            onClick={() => navigate("/")}
+            className="flex items-center gap-2.5"
+            aria-label="Ir para a página inicial FastInBox"
+          >
             <div className="w-8 h-8 bg-black rounded-sm flex items-center justify-center">
               <Box className="w-4 h-4 text-white" />
             </div>
             <span className="text-black" style={{ fontWeight: 800, letterSpacing: "-0.04em", fontSize: "1.1rem" }}>
               FastInBox
             </span>
-          </div>
+          </button>
           <nav className="hidden md:flex items-center gap-8">
             <a href="#como-funciona" className="text-gray-500 hover:text-black transition-colors text-sm">
               Como funciona
             </a>
             <a href="#beneficios" className="text-gray-500 hover:text-black transition-colors text-sm">
               Benefícios
+            </a>
+            <a
+              href="https://fastinbox-repo.github.io/docs/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-500 hover:text-black transition-colors text-sm inline-flex items-center gap-1"
+            >
+              Documentação <ExternalLink className="w-3.5 h-3.5" />
             </a>
             <button
               onClick={() => navigate("/login")}
@@ -120,6 +160,16 @@ export default function HomePage() {
               Sou Paciente
               <ArrowRight className="w-4 h-4" />
             </button>
+            <a
+              href="https://fastinbox-repo.github.io/docs/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 bg-white text-black border border-gray-300 px-6 py-3.5 rounded-md hover:border-black transition-colors"
+              style={{ fontWeight: 600 }}
+            >
+              Documentação Técnica
+              <ExternalLink className="w-4 h-4" />
+            </a>
           </div>
         </div>
       </section>
@@ -144,6 +194,85 @@ export default function HomePage() {
                 <p className="text-gray-500 text-sm">{s.label}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Demo center */}
+      <section className="max-w-7xl mx-auto px-6 py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 border border-gray-200 rounded-xl p-6">
+            <p className="text-gray-400 text-xs uppercase tracking-widest mb-2" style={{ fontWeight: 700 }}>
+              Centro de demonstração
+            </p>
+            <h2 className="text-black mb-2" style={{ fontSize: "1.6rem", fontWeight: 800, letterSpacing: "-0.03em" }}>
+              Atalhos para apresentar em banca
+            </h2>
+            <p className="text-gray-500 text-sm mb-5">
+              Use estes atalhos para entrar direto em cada jornada com dados de demo e mostrar o fluxo ponta a ponta.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <button
+                onClick={() => handleDemoAccess("nutricionista", "/nutricionista/dashboard")}
+                className="border border-gray-200 rounded-lg px-4 py-3 text-left hover:border-black transition-colors"
+              >
+                <p className="text-black text-sm" style={{ fontWeight: 700 }}>Demo Nutricionista</p>
+                <p className="text-gray-500 text-xs">Dashboard, pacientes e novo pedido</p>
+              </button>
+              <button
+                onClick={() => handleDemoAccess("paciente", "/paciente")}
+                className="border border-gray-200 rounded-lg px-4 py-3 text-left hover:border-black transition-colors"
+              >
+                <p className="text-black text-sm" style={{ fontWeight: 700 }}>Demo Paciente</p>
+                <p className="text-gray-500 text-xs">Cards de pedidos, pagamento e status</p>
+              </button>
+              <button
+                onClick={() => handleDemoAccess("cozinha", "/cozinha/dashboard")}
+                className="border border-gray-200 rounded-lg px-4 py-3 text-left hover:border-black transition-colors"
+              >
+                <p className="text-black text-sm" style={{ fontWeight: 700 }}>Demo Fábrica</p>
+                <p className="text-gray-500 text-xs">Kanban com atualização de produção</p>
+              </button>
+              <a
+                href="https://github.com/FastInBox-Repo"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border border-gray-200 rounded-lg px-4 py-3 text-left hover:border-black transition-colors"
+              >
+                <p className="text-black text-sm inline-flex items-center gap-1" style={{ fontWeight: 700 }}>
+                  Organização GitHub <ExternalLink className="w-3.5 h-3.5" />
+                </p>
+                <p className="text-gray-500 text-xs">Repositórios de front, back e docs</p>
+              </a>
+            </div>
+          </div>
+
+          <div className="border border-gray-200 rounded-xl p-6 bg-gray-50">
+            <p className="text-gray-400 text-xs uppercase tracking-widest mb-2" style={{ fontWeight: 700 }}>
+              Busca rápida
+            </p>
+            <h3 className="text-black mb-2" style={{ fontSize: "1.15rem", fontWeight: 700 }}>
+              Rastrear pedido por código
+            </h3>
+            <p className="text-gray-500 text-sm mb-4">
+              Informe o código do pedido e abra direto a timeline do paciente.
+            </p>
+            <form onSubmit={handleTrackOrder} className="space-y-3">
+              <input
+                value={trackingCode}
+                onChange={(e) => setTrackingCode(e.target.value)}
+                placeholder="Ex: FIB-2026-001"
+                className="w-full border border-gray-300 rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-black"
+              />
+              <button
+                type="submit"
+                className="w-full inline-flex items-center justify-center gap-2 bg-black text-white rounded-md px-3 py-2.5 text-sm hover:bg-gray-900 transition-colors"
+                style={{ fontWeight: 600 }}
+              >
+                <Search className="w-4 h-4" /> Abrir status
+              </button>
+            </form>
+            {trackingError ? <p className="text-xs text-red-600 mt-3">{trackingError}</p> : null}
           </div>
         </div>
       </section>
@@ -258,18 +387,40 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="border-t border-gray-100">
         <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
+          <button onClick={() => navigate("/")} className="flex items-center gap-2" aria-label="Voltar para o topo">
             <div className="w-6 h-6 bg-black rounded-sm flex items-center justify-center">
               <Box className="w-3 h-3 text-white" />
             </div>
             <span className="text-black text-sm" style={{ fontWeight: 700 }}>FastInBox</span>
-          </div>
+          </button>
           <p className="text-gray-400 text-sm">
             © 2026 FastInBox. Infraestrutura white label para nutricionistas.
           </p>
           <div className="flex items-center gap-6">
-            <a href="#" className="text-gray-400 hover:text-black text-sm transition-colors">Termos</a>
-            <a href="#" className="text-gray-400 hover:text-black text-sm transition-colors">Privacidade</a>
+            <a
+              href="https://fastinbox-repo.github.io/docs/documents/termos-legais.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-black text-sm transition-colors"
+            >
+              Termos
+            </a>
+            <a
+              href="https://fastinbox-repo.github.io/docs/documents/termos-legais.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-black text-sm transition-colors"
+            >
+              Privacidade
+            </a>
+            <a
+              href="https://fastinbox-repo.github.io/docs/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-black text-sm transition-colors inline-flex items-center gap-1"
+            >
+              Docs <ExternalLink className="w-3.5 h-3.5" />
+            </a>
           </div>
         </div>
       </footer>
