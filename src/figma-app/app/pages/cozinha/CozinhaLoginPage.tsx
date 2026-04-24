@@ -68,13 +68,6 @@ export default function CozinhaLoginPage() {
             </button>
           </form>
 
-          <button
-            onClick={() => navigate("/cozinha/dashboard")}
-            className="w-full mt-3 border border-gray-700 text-gray-400 py-2 rounded-md text-sm hover:border-gray-500 transition-colors"
-            style={{ fontWeight: 500 }}
-          >
-            Acesso rápido (demo)
-          </button>
         </div>
       </div>
     </div>

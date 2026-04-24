@@ -44,16 +44,16 @@ export default function CozinhaDashboardPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 style={{ fontWeight: 800, fontSize: "1.5rem", letterSpacing: "-0.03em" }}>
-            Kanban da Fábrica
+            Pedidos em produção
           </h1>
           <p className="text-gray-500 text-sm mt-0.5">
-            Arraste os pedidos entre as colunas até concluir a entrega.
+            Arraste os pedidos entre as etapas até concluir a entrega.
           </p>
         </div>
         <button
           className="flex items-center gap-2 border border-gray-200 text-gray-600 px-3 py-2 rounded-md text-sm hover:border-black transition-colors"
           style={{ fontWeight: 500 }}
-          onClick={() => toast.success("Kanban atualizado")}
+          onClick={() => toast.success("Pedidos atualizados")}
         >
           <RefreshCw className="w-3.5 h-3.5" /> Atualizar
         </button>

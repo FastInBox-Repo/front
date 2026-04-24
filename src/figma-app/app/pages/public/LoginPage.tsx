@@ -15,12 +15,12 @@ const roleConfig: Record<Role, { label: string; redirect: string; description: s
   paciente: {
     label: "Paciente",
     redirect: "/paciente",
-    description: "Acompanhe seus pedidos em cards",
+    description: "Acompanhe seus pedidos",
   },
   cozinha: {
     label: "Fábrica",
     redirect: "/cozinha/dashboard",
-    description: "Kanban operacional de produção",
+    description: "Painel de produção",
   },
 };
 
@@ -96,19 +96,6 @@ export default function LoginPage() {
 
     toast.success(`${roleConfig[role].label} cadastrado com sucesso!`);
     navigate(roleConfig[role].redirect);
-  };
-
-  const handleDemoLogin = () => {
-    setLoading(true);
-    setTimeout(() => {
-      const user = sprintStoreActions.demoLogin(role);
-      setLoading(false);
-      if (!user) {
-        toast.error("Não há usuário demo para esse perfil ainda");
-        return;
-      }
-      navigate(roleConfig[role].redirect);
-    }, 600);
   };
 
   return (
@@ -339,28 +326,6 @@ export default function LoginPage() {
               {loading ? (mode === "login" ? "Entrando..." : "Cadastrando...") : mode === "login" ? "Entrar" : "Criar conta"}
             </button>
           </form>
-
-          {mode === "login" && (
-            <>
-              <div className="relative my-5">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-200" />
-                </div>
-                <div className="relative flex justify-center text-xs text-gray-400 bg-gray-50 px-2">
-                  ou entrada rápida
-                </div>
-              </div>
-
-              <button
-                onClick={handleDemoLogin}
-                disabled={loading}
-                className="w-full border border-gray-200 text-gray-700 py-2.5 rounded-md text-sm hover:border-black transition-colors disabled:opacity-50"
-                style={{ fontWeight: 500 }}
-              >
-                {loading ? "Redirecionando..." : `Entrar como ${roleConfig[role].label}`}
-              </button>
-            </>
-          )}
 
           <p className="mt-6 text-center text-xs text-gray-400">
             <Link to="/" className="flex items-center justify-center gap-1 hover:text-black transition-colors">

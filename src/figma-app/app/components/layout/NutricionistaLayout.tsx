@@ -50,7 +50,7 @@ export default function NutricionistaLayout() {
             rel="noopener noreferrer"
             className="mt-3 inline-flex text-xs text-gray-400 hover:text-white transition-colors"
           >
-            Abrir documentação técnica
+            Central de ajuda
           </a>
         </div>
 

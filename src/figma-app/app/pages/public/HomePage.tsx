@@ -1,6 +1,21 @@
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router";
-import { Box, ArrowRight, CheckCircle, Zap, ShieldCheck, Users, ChefHat, BarChart3, Search } from "lucide-react";
+import {
+  Box,
+  ArrowRight,
+  CheckCircle,
+  Zap,
+  ShieldCheck,
+  Users,
+  ChefHat,
+  BarChart3,
+  Search,
+  Quote,
+  Plus,
+  Minus,
+  Mail,
+  MessageCircle,
+} from "lucide-react";
 import { useSprintSession } from "../../data/sprintStore";
 
 const benefits = [
@@ -43,11 +58,61 @@ const steps = [
   { num: "04", title: "Produção e entrega acontecem", desc: "O pedido segue para preparo e acompanhamento com mais organização até a entrega." },
 ];
 
+const testimonials = [
+  {
+    name: "Dra. Ana Carvalho",
+    role: "Nutricionista · Clínica Nutrition Vida",
+    quote:
+      "Minha clínica ganhou tempo e profissionalismo. Os pacientes adoram ter o cardápio personalizado com a minha marca em um só lugar.",
+  },
+  {
+    name: "Dr. Carlos Lima",
+    role: "Nutricionista · NutriVida",
+    quote:
+      "Reduzi o atrito de cobrança e de confirmação. Agora cada pedido nasce organizado, com preço claro e entrega previsível.",
+  },
+  {
+    name: "Dra. Juliana Reis",
+    role: "Nutricionista · Nutri 360",
+    quote:
+      "A experiência do paciente ficou impecável. Mais confiança na marca da minha clínica e menos retrabalho no dia a dia.",
+  },
+];
+
+const faqs = [
+  {
+    question: "Preciso instalar algo ou contratar equipe técnica?",
+    answer:
+      "Não. O FastInBox funciona totalmente online, direto no navegador. Sua clínica começa a operar em poucos minutos, sem instalação.",
+  },
+  {
+    question: "Como a identidade da minha clínica aparece na plataforma?",
+    answer:
+      "Você personaliza logo, nome e cor principal. A partir daí, o paciente vê a experiência do pedido com a marca da sua clínica em destaque.",
+  },
+  {
+    question: "Quais formas de pagamento o paciente pode usar?",
+    answer:
+      "Oferecemos PIX, cartão de crédito e boleto bancário. Tudo processado com segurança diretamente no fluxo do pedido.",
+  },
+  {
+    question: "Consigo acompanhar o status de cada pedido?",
+    answer:
+      "Sim. Nutricionista, paciente e produção acompanham cada etapa em tempo real — do pedido criado até a entrega confirmada.",
+  },
+  {
+    question: "A plataforma atende clínicas de qualquer tamanho?",
+    answer:
+      "Sim. Do consultório individual às clínicas com várias unidades, o FastInBox escala junto com a sua operação, mantendo tudo organizado.",
+  },
+];
+
 export default function HomePage() {
   const navigate = useNavigate();
   const { orders } = useSprintSession();
   const [trackingCode, setTrackingCode] = useState("");
   const [trackingError, setTrackingError] = useState("");
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   const handleTrackOrder = (event: FormEvent) => {
     event.preventDefault();
@@ -94,6 +159,12 @@ export default function HomePage() {
             </a>
             <a href="#beneficios" className="text-gray-500 hover:text-black transition-colors text-sm">
               Benefícios
+            </a>
+            <a href="#faq" className="text-gray-500 hover:text-black transition-colors text-sm">
+              Perguntas frequentes
+            </a>
+            <a href="#contato" className="text-gray-500 hover:text-black transition-colors text-sm">
+              Contato
             </a>
             <button
               onClick={() => navigate("/login")}
@@ -312,8 +383,154 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Testimonials */}
+      <section id="depoimentos" className="max-w-7xl mx-auto px-6 py-24 fi-animate-in">
+        <div className="mb-14">
+          <p className="text-gray-400 text-sm uppercase tracking-widest mb-3" style={{ fontWeight: 600 }}>
+            Depoimentos
+          </p>
+          <h2
+            className="text-black"
+            style={{ fontSize: "2rem", fontWeight: 800, letterSpacing: "-0.03em" }}
+          >
+            Quem usa, recomenda
+          </h2>
+          <p className="text-gray-500 mt-3 max-w-xl" style={{ lineHeight: 1.7 }}>
+            Nutricionistas e clínicas que organizaram a operação e ganharam tempo com o FastInBox.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 fi-stagger">
+          {testimonials.map((t) => (
+            <article
+              key={t.name}
+              className="border border-gray-200 rounded-xl p-6 bg-white hover:border-black transition-colors"
+            >
+              <Quote className="w-5 h-5 text-gray-300 mb-4" />
+              <p className="text-gray-700 text-sm mb-6" style={{ lineHeight: 1.7 }}>
+                "{t.quote}"
+              </p>
+              <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+                <div className="w-9 h-9 rounded-full bg-black flex items-center justify-center flex-shrink-0">
+                  <span className="text-white text-xs" style={{ fontWeight: 700 }}>
+                    {t.name.split(" ").map((w) => w[0]).slice(0, 2).join("")}
+                  </span>
+                </div>
+                <div className="min-w-0">
+                  <p className="text-black text-sm" style={{ fontWeight: 700 }}>{t.name}</p>
+                  <p className="text-gray-500 text-xs truncate">{t.role}</p>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="bg-gray-50 border-y border-gray-100 fi-animate-in">
+        <div className="max-w-3xl mx-auto px-6 py-24">
+          <div className="mb-14 text-center">
+            <p className="text-gray-400 text-sm uppercase tracking-widest mb-3" style={{ fontWeight: 600 }}>
+              Perguntas frequentes
+            </p>
+            <h2
+              className="text-black"
+              style={{ fontSize: "2rem", fontWeight: 800, letterSpacing: "-0.03em" }}
+            >
+              O que você precisa saber
+            </h2>
+            <p className="text-gray-500 mt-3 max-w-xl mx-auto" style={{ lineHeight: 1.7 }}>
+              Respostas diretas para as dúvidas mais comuns sobre a plataforma.
+            </p>
+          </div>
+          <div className="space-y-3 fi-stagger">
+            {faqs.map((faq, idx) => {
+              const isOpen = openFaq === idx;
+              return (
+                <article
+                  key={faq.question}
+                  className={`border rounded-xl bg-white transition-colors ${isOpen ? "border-black" : "border-gray-200"}`}
+                >
+                  <button
+                    onClick={() => setOpenFaq(isOpen ? null : idx)}
+                    className="w-full flex items-center justify-between gap-4 text-left px-5 py-4"
+                    aria-expanded={isOpen}
+                  >
+                    <span className="text-black text-sm" style={{ fontWeight: 600 }}>
+                      {faq.question}
+                    </span>
+                    {isOpen ? (
+                      <Minus className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                    ) : (
+                      <Plus className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                    )}
+                  </button>
+                  {isOpen && (
+                    <div className="px-5 pb-5">
+                      <p className="text-gray-600 text-sm" style={{ lineHeight: 1.7 }}>
+                        {faq.answer}
+                      </p>
+                    </div>
+                  )}
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact */}
+      <section id="contato" className="max-w-7xl mx-auto px-6 py-24 fi-animate-in">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+          <div className="lg:col-span-2">
+            <p className="text-gray-400 text-sm uppercase tracking-widest mb-3" style={{ fontWeight: 600 }}>
+              Fale com a gente
+            </p>
+            <h2
+              className="text-black mb-4"
+              style={{ fontSize: "1.75rem", fontWeight: 800, letterSpacing: "-0.03em" }}
+            >
+              Pronto para atender melhor seus pacientes?
+            </h2>
+            <p className="text-gray-500" style={{ lineHeight: 1.7 }}>
+              Nossa equipe ajuda sua clínica a iniciar a operação e tirar qualquer dúvida sobre personalização,
+              pagamentos, produção e entrega.
+            </p>
+          </div>
+          <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <a
+              href="mailto:contato@fastinbox.com.br"
+              className="border border-gray-200 rounded-xl p-6 bg-white hover:border-black transition-colors block"
+            >
+              <Mail className="w-5 h-5 text-black mb-4" />
+              <p className="text-black text-sm mb-1" style={{ fontWeight: 700 }}>E-mail</p>
+              <p className="text-gray-500 text-sm">contato@fastinbox.com.br</p>
+              <p className="text-gray-400 text-xs mt-3">Respondemos em até 1 dia útil.</p>
+            </a>
+            <a
+              href="https://wa.me/5511999999999"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border border-gray-200 rounded-xl p-6 bg-white hover:border-black transition-colors block"
+            >
+              <MessageCircle className="w-5 h-5 text-black mb-4" />
+              <p className="text-black text-sm mb-1" style={{ fontWeight: 700 }}>WhatsApp</p>
+              <p className="text-gray-500 text-sm">Atendimento comercial</p>
+              <p className="text-gray-400 text-xs mt-3">Seg a Sex · 9h às 18h.</p>
+            </a>
+            <button
+              onClick={() => navigate("/login?role=nutricionista")}
+              className="border border-black rounded-xl p-6 bg-black text-left hover:bg-gray-900 transition-colors md:col-span-2"
+            >
+              <ArrowRight className="w-5 h-5 text-white mb-4" />
+              <p className="text-white text-sm mb-1" style={{ fontWeight: 700 }}>Criar conta agora</p>
+              <p className="text-gray-300 text-sm">Comece a usar a plataforma em minutos, sem instalação.</p>
+            </button>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
-      <section className="max-w-7xl mx-auto px-6 py-24 fi-animate-in">
+      <section className="max-w-7xl mx-auto px-6 pb-24 fi-animate-in">
         <div className="border border-gray-200 rounded-xl p-12 text-center">
           <h2
             className="text-black mb-4"
