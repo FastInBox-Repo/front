@@ -8,7 +8,9 @@ import {
   mockClinic,
   mockOrders,
   mockPatients,
+  statusLabels,
 } from "./mockData";
+import { auditActions } from "./auditStore";
 
 export type AppRole = "nutricionista" | "paciente" | "cozinha" | "admin";
 
@@ -185,6 +187,10 @@ const emit = () => {
   listeners.forEach((listener) => listener());
 };
 
+const emitWithoutSave = () => {
+  listeners.forEach((listener) => listener());
+};
+
 const setState = (updater: (prev: SprintState) => SprintState) => {
   state = updater(state);
   emit();
@@ -196,6 +202,18 @@ const subscribe = (listener: () => void) => {
 };
 
 const getSnapshot = () => state;
+
+if (typeof window !== "undefined") {
+  window.addEventListener("storage", (event) => {
+    if (event.key === STORAGE_KEY && event.newValue) {
+      const parsed = safeParse(event.newValue);
+      if (parsed) {
+        state = parsed;
+        emitWithoutSave();
+      }
+    }
+  });
+}
 
 const generateCode = (orders: SprintOrder[]) => {
   let attempt = 0;
@@ -218,22 +236,47 @@ export const sprintStoreActions = {
   },
 
   logout() {
+    const currentUser = findCurrentUser();
     setState((prev) => ({ ...prev, currentUserId: null }));
+    if (currentUser) {
+      auditActions.record({
+        type: "logout",
+        actorId: currentUser.id,
+        actorName: currentUser.name,
+        actorRole: currentUser.role,
+        description: `${currentUser.name} encerrou a sessão`,
+      });
+    }
   },
 
   login(email: string, password: string, role?: AppRole) {
+    const normalizedEmail = email.trim().toLowerCase();
     const found = state.users.find((user) => {
-      const sameEmail = user.email.toLowerCase() === email.trim().toLowerCase();
+      const sameEmail = user.email.toLowerCase() === normalizedEmail;
       const samePassword = user.password === password;
       const sameRole = role ? user.role === role : true;
       return sameEmail && samePassword && sameRole;
     });
 
     if (!found) {
+      auditActions.record({
+        type: "login_failed",
+        actorId: null,
+        actorName: normalizedEmail || "anônimo",
+        actorRole: role || "desconhecido",
+        description: `Tentativa de login sem sucesso${role ? ` (perfil ${role})` : ""}`,
+      });
       return null;
     }
 
     setState((prev) => ({ ...prev, currentUserId: found.id }));
+    auditActions.record({
+      type: "login",
+      actorId: found.id,
+      actorName: found.name,
+      actorRole: found.role,
+      description: `${found.name} entrou na plataforma`,
+    });
     return found;
   },
 
@@ -243,6 +286,14 @@ export const sprintStoreActions = {
       return null;
     }
     setState((prev) => ({ ...prev, currentUserId: candidate.id }));
+    auditActions.record({
+      type: "login",
+      actorId: candidate.id,
+      actorName: candidate.name,
+      actorRole: candidate.role,
+      description: `${candidate.name} entrou na plataforma`,
+      metadata: { mode: "demo" },
+    });
     return candidate;
   },
 
@@ -289,6 +340,26 @@ export const sprintStoreActions = {
       currentUserId: user.id,
     }));
 
+    auditActions.record({
+      type: "user_registered",
+      actorId: user.id,
+      actorName: user.name,
+      actorRole: user.role,
+      description: `Novo cadastro de ${input.role}: ${user.name}`,
+      metadata: { email: user.email },
+    });
+
+    if (patient) {
+      auditActions.record({
+        type: "patient_created",
+        actorId: user.id,
+        actorName: user.name,
+        actorRole: user.role,
+        targetId: patient.id,
+        description: `Paciente ${patient.name} cadastrado via auto-registro`,
+      });
+    }
+
     return { ok: true, user } as const;
   },
 
@@ -310,6 +381,17 @@ export const sprintStoreActions = {
       ...prev,
       patients: [newPatient, ...prev.patients],
     }));
+
+    const actor = findCurrentUser();
+    auditActions.record({
+      type: "patient_created",
+      actorId: actor?.id ?? null,
+      actorName: actor?.name ?? "Sistema",
+      actorRole: actor?.role ?? "sistema",
+      targetId: newPatient.id,
+      description: `Paciente ${newPatient.name} cadastrado`,
+      metadata: { goal: newPatient.goal, restrictions: newPatient.restrictions },
+    });
 
     return newPatient;
   },
@@ -353,16 +435,33 @@ export const sprintStoreActions = {
       ),
     }));
 
+    const actor = findCurrentUser();
+    auditActions.record({
+      type: "order_created",
+      actorId: actor?.id ?? input.nutritionistId,
+      actorName: actor?.name ?? input.nutritionistName,
+      actorRole: actor?.role ?? "nutricionista",
+      targetId: order.id,
+      targetCode: order.code,
+      description: `Pedido ${order.code} criado para ${order.patientName}`,
+      metadata: {
+        total: order.finalPrice,
+        items: order.items.reduce((sum, item) => sum + item.quantity, 0),
+      },
+    });
+
     return order;
   },
 
   updateOrderStatus(orderId: string, status: OrderStatus) {
+    let previous: SprintOrder | undefined;
     setState((prev) => ({
       ...prev,
       orders: prev.orders.map((order) => {
         if (order.id !== orderId) {
           return order;
         }
+        previous = order;
         return {
           ...order,
           status,
@@ -370,9 +469,24 @@ export const sprintStoreActions = {
         };
       }),
     }));
+
+    if (previous && previous.status !== status) {
+      const actor = findCurrentUser();
+      auditActions.record({
+        type: "order_status_changed",
+        actorId: actor?.id ?? null,
+        actorName: actor?.name ?? "Sistema",
+        actorRole: actor?.role ?? "sistema",
+        targetId: previous.id,
+        targetCode: previous.code,
+        description: `${previous.code}: ${statusLabels[previous.status]} -> ${statusLabels[status]}`,
+        metadata: { from: previous.status, to: status },
+      });
+    }
   },
 
   markOrderAsPaid(code: string, paymentMethod: string) {
+    let matchedOrder: SprintOrder | undefined;
     setState((prev) => ({
       ...prev,
       orders: prev.orders.map((order) => {
@@ -386,6 +500,7 @@ export const sprintStoreActions = {
           order.status === "em_entrega" ||
           order.status === "entregue";
 
+        matchedOrder = order;
         return {
           ...order,
           paymentMethod,
@@ -394,6 +509,20 @@ export const sprintStoreActions = {
         };
       }),
     }));
+
+    if (matchedOrder) {
+      const actor = findCurrentUser();
+      auditActions.record({
+        type: "order_paid",
+        actorId: actor?.id ?? null,
+        actorName: actor?.name ?? matchedOrder.patientName,
+        actorRole: actor?.role ?? "paciente",
+        targetId: matchedOrder.id,
+        targetCode: matchedOrder.code,
+        description: `${matchedOrder.code} pago via ${paymentMethod.toUpperCase()}`,
+        metadata: { total: matchedOrder.finalPrice, method: paymentMethod },
+      });
+    }
   },
 
   getCurrentUser: findCurrentUser,

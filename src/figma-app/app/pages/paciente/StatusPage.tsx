@@ -1,7 +1,9 @@
 import { useParams, useNavigate } from "react-router";
-import { ArrowLeft, Package, ChefHat, Truck, CheckCircle, Clock } from "lucide-react";
+import { ArrowLeft, Package, ChefHat, Truck, CheckCircle, Clock, Radio } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { formatDate } from "../../data/mockData";
 import { useSprintSession } from "../../data/sprintStore";
+import { formatAuditDate, formatAuditTimeAgo, useAuditLog } from "../../data/auditStore";
 
 const STATUS_STEPS = [
   { id: "pago", icon: CheckCircle, label: "Pagamento confirmado", desc: "Seu pagamento foi aprovado" },
@@ -17,7 +19,30 @@ export default function StatusPage() {
   const { code } = useParams();
   const navigate = useNavigate();
   const { orders, clinic } = useSprintSession();
+  const auditEvents = useAuditLog();
   const order = orders.find((o) => o.code === code);
+  const [lastSyncAt, setLastSyncAt] = useState(() => new Date());
+
+  useEffect(() => {
+    setLastSyncAt(new Date());
+  }, [order?.status]);
+
+  const timelineEvents = useMemo(() => {
+    if (!order) return new Map<string, string>();
+    const map = new Map<string, string>();
+    auditEvents.forEach((event) => {
+      if (event.targetId !== order.id && event.targetCode !== order.code) return;
+      if (event.type === "order_paid") {
+        if (!map.has("pago")) map.set("pago", event.createdAt);
+        return;
+      }
+      if (event.type === "order_status_changed" && event.metadata?.to) {
+        const toStatus = String(event.metadata.to);
+        if (!map.has(toStatus)) map.set(toStatus, event.createdAt);
+      }
+    });
+    return map;
+  }, [auditEvents, order]);
 
   if (!order) {
     return (
@@ -76,14 +101,27 @@ export default function StatusPage() {
 
         {/* Timeline */}
         <div className="bg-white border border-gray-200 rounded-xl p-5 mb-4">
-          <p className="text-xs text-gray-400 uppercase tracking-wider mb-5" style={{ fontWeight: 600 }}>
-            Status do pedido
-          </p>
+          <div className="flex items-center justify-between mb-5 gap-2 flex-wrap">
+            <p className="text-xs text-gray-400 uppercase tracking-wider" style={{ fontWeight: 600 }}>
+              Status do pedido
+            </p>
+            <div className="flex items-center gap-1.5">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-black opacity-60" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-black" />
+              </span>
+              <span className="text-[10px] text-gray-500" style={{ fontWeight: 600 }}>
+                Atualizado {formatAuditTimeAgo(lastSyncAt.toISOString())}
+              </span>
+              <Radio className="w-3 h-3 text-gray-300" aria-hidden="true" />
+            </div>
+          </div>
           <div className="space-y-0">
             {STATUS_STEPS.map((step, idx) => {
               const isDone = idx <= currentStep;
               const isCurrent = idx === currentStep;
               const Icon = step.icon;
+              const eventAt = timelineEvents.get(step.id);
 
               return (
                 <div key={step.id} className="flex gap-4">
@@ -122,6 +160,11 @@ export default function StatusPage() {
                     <p className={`text-xs mt-0.5 ${isDone ? "text-gray-400" : "text-gray-200"}`}>
                       {step.desc}
                     </p>
+                    {eventAt && (
+                      <p className="text-[10px] text-gray-400 mt-1 font-mono">
+                        {formatAuditDate(eventAt)}
+                      </p>
+                    )}
                   </div>
                 </div>
               );

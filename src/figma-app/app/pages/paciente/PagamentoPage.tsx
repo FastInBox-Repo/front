@@ -1,11 +1,20 @@
 import { useParams, useNavigate } from "react-router";
-import { ArrowLeft, Lock, CreditCard, Smartphone, Check } from "lucide-react";
+import { ArrowLeft, Lock, CreditCard, Smartphone, Check, Loader2, ShieldCheck } from "lucide-react";
 import { formatCurrency } from "../../data/mockData";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { sprintStoreActions, useSprintSession } from "../../data/sprintStore";
 
 type Method = "pix" | "cartao" | "boleto";
+
+type ProgressStage = "idle" | "verificando" | "processando" | "confirmando" | "sucesso";
+
+const progressSteps: { id: ProgressStage; label: string }[] = [
+  { id: "verificando", label: "Verificando dados" },
+  { id: "processando", label: "Processando pagamento" },
+  { id: "confirmando", label: "Confirmando com a clínica" },
+  { id: "sucesso", label: "Pagamento aprovado" },
+];
 
 export default function PagamentoPage() {
   const { code } = useParams();
@@ -16,9 +25,19 @@ export default function PagamentoPage() {
   const [cardExpiry, setCardExpiry] = useState("");
   const [cardCvv, setCardCvv] = useState("");
   const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState<ProgressStage>("idle");
   const { orders, clinic } = useSprintSession();
 
   const order = orders.find((o) => o.code === code);
+
+  useEffect(() => {
+    if (progress === "sucesso") {
+      const timeout = setTimeout(() => {
+        navigate(`/paciente/pedido/${code}/sucesso`);
+      }, 900);
+      return () => clearTimeout(timeout);
+    }
+  }, [progress, code, navigate]);
 
   if (!order) {
     return (
@@ -43,11 +62,19 @@ export default function PagamentoPage() {
       return;
     }
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 2000));
+    setProgress("verificando");
+    await new Promise((r) => setTimeout(r, 700));
+    setProgress("processando");
+    await new Promise((r) => setTimeout(r, 900));
+    setProgress("confirmando");
+    await new Promise((r) => setTimeout(r, 600));
     sprintStoreActions.markOrderAsPaid(code || "", method);
+    setProgress("sucesso");
+    toast.success("Pagamento confirmado! Seu pedido entrou na fila de produção.");
     setLoading(false);
-    navigate(`/paciente/pedido/${code}/sucesso`);
   };
+
+  const progressIndex = progressSteps.findIndex((step) => step.id === progress);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -211,6 +238,52 @@ export default function PagamentoPage() {
           <p className="text-xs text-gray-400">Pagamento 100% seguro com criptografia SSL</p>
         </div>
 
+        {loading && progressIndex >= 0 && (
+          <div
+            className="mb-4 border border-gray-200 rounded-xl p-4 bg-white"
+            role="status"
+            aria-live="polite"
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <Loader2 className="w-4 h-4 text-black animate-spin" />
+              <p className="text-sm text-black" style={{ fontWeight: 600 }}>
+                {progressSteps[progressIndex]?.label ?? "Processando"}
+              </p>
+            </div>
+            <div className="space-y-2">
+              {progressSteps.map((step, idx) => {
+                const done = idx < progressIndex;
+                const current = idx === progressIndex;
+                return (
+                  <div key={step.id} className="flex items-center gap-2">
+                    <span
+                      className={`w-4 h-4 rounded-full border flex items-center justify-center text-[10px] ${
+                        done
+                          ? "bg-black border-black text-white"
+                          : current
+                          ? "bg-white border-black text-black"
+                          : "bg-white border-gray-200 text-gray-300"
+                      }`}
+                    >
+                      {done ? <Check className="w-2.5 h-2.5" /> : idx + 1}
+                    </span>
+                    <span
+                      className={`text-xs ${current ? "text-black" : done ? "text-gray-500" : "text-gray-300"}`}
+                      style={{ fontWeight: current ? 600 : 500 }}
+                    >
+                      {step.label}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-3 flex items-center gap-2 text-[10px] text-gray-500">
+              <ShieldCheck className="w-3 h-3" />
+              <span>Transação 100% simulada para demonstração. Nenhum dado real é cobrado.</span>
+            </div>
+          </div>
+        )}
+
         <button
           onClick={handlePay}
           disabled={loading}
@@ -218,7 +291,9 @@ export default function PagamentoPage() {
           style={{ fontWeight: 700, fontSize: "1rem" }}
         >
           {loading ? (
-            <>Processando pagamento...</>
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" /> Processando pagamento...
+            </>
           ) : (
             <>
               <Check className="w-4 h-4" />

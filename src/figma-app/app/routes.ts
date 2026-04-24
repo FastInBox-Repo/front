@@ -28,6 +28,8 @@ import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
 import AdminUsuariosPage from "./pages/admin/AdminUsuariosPage";
 import AdminPedidosPage from "./pages/admin/AdminPedidosPage";
 import AdminConfiguracoesPage from "./pages/admin/AdminConfiguracoesPage";
+import AdminAuditoriaPage from "./pages/admin/AdminAuditoriaPage";
+import AdminDiagnosticoPage from "./pages/admin/AdminDiagnosticoPage";
 
 export const router = createBrowserRouter([
   { path: "/", Component: HomePage },
@@ -76,6 +78,8 @@ export const router = createBrowserRouter([
       { path: "dashboard", Component: AdminDashboardPage },
       { path: "usuarios", Component: AdminUsuariosPage },
       { path: "pedidos", Component: AdminPedidosPage },
+      { path: "auditoria", Component: AdminAuditoriaPage },
+      { path: "diagnostico", Component: AdminDiagnosticoPage },
       { path: "configuracoes", Component: AdminConfiguracoesPage },
     ],
   },

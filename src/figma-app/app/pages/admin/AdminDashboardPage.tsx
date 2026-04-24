@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router";
-import { ShoppingBag, DollarSign, TrendingUp, Users, ChevronRight, BarChart3 } from "lucide-react";
-import { mockOrders, mockPatients, formatCurrency, statusLabels, formatDate } from "../../data/mockData";
+import { Activity, ShoppingBag, DollarSign, TrendingUp, Users, ChevronRight, BarChart3 } from "lucide-react";
+import { formatCurrency, statusLabels, formatDate } from "../../data/mockData";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { useSprintSession } from "../../data/sprintStore";
+import { auditLabels, formatAuditTimeAgo, useAuditLog } from "../../data/auditStore";
 
 const chartData = [
   { dia: "Seg", pedidos: 4, faturamento: 88000 },
@@ -33,18 +35,21 @@ const StatusBadge = ({ status }: { status: string }) => {
 
 export default function AdminDashboardPage() {
   const navigate = useNavigate();
+  const { orders, patients } = useSprintSession();
+  const auditEvents = useAuditLog();
 
-  const totalPedidos = mockOrders.length;
-  const pagos = mockOrders.filter((o) => o.paidAt).length;
-  const emProducao = mockOrders.filter((o) => o.status === "em_producao").length;
-  const faturamento = mockOrders.filter((o) => o.paidAt).reduce((acc, o) => acc + o.finalPrice, 0);
+  const totalPedidos = orders.length;
+  const pagos = orders.filter((o) => o.paidAt).length;
+  const faturamento = orders.filter((o) => o.paidAt).reduce((acc, o) => acc + o.finalPrice, 0);
 
   const metrics = [
     { icon: ShoppingBag, label: "Total de pedidos", value: totalPedidos, sub: "Todos os status" },
     { icon: DollarSign, label: "Faturamento bruto", value: formatCurrency(faturamento), sub: "Pedidos pagos", isText: true },
     { icon: TrendingUp, label: "Pagos / confirmados", value: pagos, sub: "Prontos para produção" },
-    { icon: Users, label: "Pacientes ativos", value: mockPatients.length, sub: "Cadastrados" },
+    { icon: Users, label: "Pacientes ativos", value: patients.length, sub: "Cadastrados" },
   ];
+
+  const recentEvents = auditEvents.slice(0, 6);
 
   return (
     <div className="p-8">
@@ -108,8 +113,8 @@ export default function AdminDashboardPage() {
               { status: "pronto", label: "Pronto" },
               { status: "entregue", label: "Entregue" },
             ].map(({ status, label }) => {
-              const count = mockOrders.filter((o) => o.status === status).length;
-              const pct = Math.round((count / totalPedidos) * 100);
+              const count = orders.filter((o) => o.status === status).length;
+              const pct = totalPedidos > 0 ? Math.round((count / totalPedidos) * 100) : 0;
               return (
                 <div key={status}>
                   <div className="flex justify-between text-sm mb-1">
@@ -127,6 +132,55 @@ export default function AdminDashboardPage() {
             })}
           </div>
         </div>
+      </div>
+
+      {/* Recent audit events */}
+      <div className="bg-white border border-gray-200 rounded-lg mb-6">
+        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between gap-3 flex-wrap">
+          <div className="flex items-center gap-2">
+            <Activity className="w-4 h-4 text-gray-400" />
+            <h2 style={{ fontWeight: 600, fontSize: "0.9375rem" }}>Eventos recentes</h2>
+          </div>
+          <button
+            onClick={() => navigate("/admin/auditoria")}
+            className="text-xs text-gray-500 hover:text-black flex items-center gap-1 transition-colors"
+          >
+            Abrir auditoria <ChevronRight className="w-3 h-3" />
+          </button>
+        </div>
+        {recentEvents.length === 0 ? (
+          <div className="px-6 py-8 text-center">
+            <p className="text-sm text-gray-500" style={{ fontWeight: 500 }}>
+              Nenhum evento registrado ainda.
+            </p>
+            <p className="text-xs text-gray-400 mt-1">
+              Faça login, crie um pedido ou movimente um status para começar o histórico.
+            </p>
+          </div>
+        ) : (
+          <ul className="divide-y divide-gray-50">
+            {recentEvents.map((event) => (
+              <li key={event.id} className="px-6 py-3 flex items-center justify-between gap-3 flex-wrap">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-sm text-black" style={{ fontWeight: 600 }}>
+                      {auditLabels[event.type] ?? event.type}
+                    </span>
+                    {event.targetCode && (
+                      <span className="text-[10px] font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded" style={{ fontWeight: 600 }}>
+                        {event.targetCode}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-500 truncate">{event.description}</p>
+                </div>
+                <span className="text-[10px] text-gray-400 flex-shrink-0">
+                  {formatAuditTimeAgo(event.createdAt)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       {/* Recent orders table */}
@@ -152,7 +206,7 @@ export default function AdminDashboardPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {mockOrders.map((o) => (
+              {orders.map((o) => (
                 <tr key={o.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-4 py-3 text-sm font-mono" style={{ fontWeight: 600 }}>{o.code}</td>
                   <td className="px-4 py-3 text-sm text-gray-700">{o.patientName}</td>

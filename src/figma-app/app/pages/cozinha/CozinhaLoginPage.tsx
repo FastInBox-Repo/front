@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Box, ChefHat } from "lucide-react";
-import { toast } from "sonner";
 
 export default function CozinhaLoginPage() {
   const navigate = useNavigate();
-  const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {

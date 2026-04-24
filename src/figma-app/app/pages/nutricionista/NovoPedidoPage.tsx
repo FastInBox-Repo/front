@@ -549,7 +549,7 @@ export default function NovoPedidoPage() {
                     </div>
                   </div>
                 </div>
-                {items.map((item, idx) => (
+                {items.map((item) => (
                   <div key={item.id} className="border border-gray-200 rounded-lg p-4 mb-3">
                     <div className="flex items-center justify-between mb-2">
                       <p className="text-black text-sm" style={{ fontWeight: 600 }}>

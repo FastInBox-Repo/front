@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Filter } from "lucide-react";
+import { Search } from "lucide-react";
 import { mockOrders, formatCurrency, formatDate, statusLabels, OrderStatus } from "../../data/mockData";
 
 const STATUS_FILTERS: { id: OrderStatus | "todos"; label: string }[] = [
