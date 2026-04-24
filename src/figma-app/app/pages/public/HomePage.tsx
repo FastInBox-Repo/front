@@ -154,16 +154,16 @@ export default function HomePage() {
             </span>
           </button>
           <nav className="hidden md:flex items-center gap-8">
-            <a href="#como-funciona" className="text-gray-500 hover:text-black transition-colors text-sm">
+            <a href="#como-funciona" className="text-gray-700 hover:text-black transition-colors text-sm" style={{ fontWeight: 500 }}>
               Como funciona
             </a>
-            <a href="#beneficios" className="text-gray-500 hover:text-black transition-colors text-sm">
+            <a href="#beneficios" className="text-gray-700 hover:text-black transition-colors text-sm" style={{ fontWeight: 500 }}>
               Benefícios
             </a>
-            <a href="#faq" className="text-gray-500 hover:text-black transition-colors text-sm">
+            <a href="#faq" className="text-gray-700 hover:text-black transition-colors text-sm" style={{ fontWeight: 500 }}>
               Perguntas frequentes
             </a>
-            <a href="#contato" className="text-gray-500 hover:text-black transition-colors text-sm">
+            <a href="#contato" className="text-gray-700 hover:text-black transition-colors text-sm" style={{ fontWeight: 500 }}>
               Contato
             </a>
             <button
@@ -197,11 +197,11 @@ export default function HomePage() {
           >
             Marmitas personalizadas.
             <br />
-            <span className="text-gray-500">Sua marca em primeiro plano.</span>
+            <span className="text-gray-700">Sua marca em primeiro plano.</span>
             <br />
             Fluxo completo.
           </h1>
-          <p className="text-gray-500 mb-10 max-w-xl" style={{ fontSize: "1.125rem", lineHeight: 1.7 }}>
+          <p className="text-gray-800 mb-10 max-w-xl" style={{ fontSize: "1.125rem", lineHeight: 1.7 }}>
             Sua clínica vende marmitas personalizadas com uma experiência mais elegante, organizada e
             simples para o paciente, do pedido à entrega.
           </p>
@@ -243,7 +243,7 @@ export default function HomePage() {
                 >
                   {s.value}
                 </p>
-                <p className="text-gray-500 text-sm">{s.label}</p>
+                <p className="text-gray-700 text-sm" style={{ fontWeight: 500 }}>{s.label}</p>
               </div>
             ))}
           </div>
@@ -253,44 +253,44 @@ export default function HomePage() {
       {/* Quick access */}
       <section className="max-w-7xl mx-auto px-6 py-20 fi-animate-in">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 border border-gray-200 rounded-xl p-6">
-            <p className="text-gray-400 text-xs uppercase tracking-widest mb-2" style={{ fontWeight: 700 }}>
+          <div className="lg:col-span-2 border border-gray-300 rounded-xl p-6">
+            <p className="text-gray-700 text-xs uppercase tracking-widest mb-2" style={{ fontWeight: 700 }}>
               Para quem é
             </p>
             <h2 className="text-black mb-2" style={{ fontSize: "1.6rem", fontWeight: 800, letterSpacing: "-0.03em" }}>
               Uma operação mais simples para clínica, paciente e produção
             </h2>
-            <p className="text-gray-500 text-sm mb-5">
+            <p className="text-gray-800 text-sm mb-5" style={{ lineHeight: 1.6 }}>
               O FastInBox organiza a jornada inteira em um fluxo claro, com menos ruído operacional e mais previsibilidade.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 fi-stagger">
-              <div className="border border-gray-200 rounded-lg px-4 py-3 text-left">
+              <div className="border border-gray-300 rounded-lg px-4 py-3 text-left">
                 <p className="text-black text-sm" style={{ fontWeight: 700 }}>Nutricionistas e clínicas</p>
-                <p className="text-gray-500 text-xs">Criam pedidos com agilidade, acompanham confirmações e mantêm sua própria marca em destaque.</p>
+                <p className="text-gray-800 text-xs" style={{ lineHeight: 1.55 }}>Criam pedidos com agilidade, acompanham confirmações e mantêm sua própria marca em destaque.</p>
               </div>
-              <div className="border border-gray-200 rounded-lg px-4 py-3 text-left">
+              <div className="border border-gray-300 rounded-lg px-4 py-3 text-left">
                 <p className="text-black text-sm" style={{ fontWeight: 700 }}>Pacientes</p>
-                <p className="text-gray-500 text-xs">Recebem um fluxo claro para revisar, pagar e acompanhar cada etapa do pedido.</p>
+                <p className="text-gray-800 text-xs" style={{ lineHeight: 1.55 }}>Recebem um fluxo claro para revisar, pagar e acompanhar cada etapa do pedido.</p>
               </div>
-              <div className="border border-gray-200 rounded-lg px-4 py-3 text-left">
+              <div className="border border-gray-300 rounded-lg px-4 py-3 text-left">
                 <p className="text-black text-sm" style={{ fontWeight: 700 }}>Produção</p>
-                <p className="text-gray-500 text-xs">Trabalha com pedidos já validados, o que reduz ruído e melhora a previsibilidade da operação.</p>
+                <p className="text-gray-800 text-xs" style={{ lineHeight: 1.55 }}>Trabalha com pedidos já validados, o que reduz ruído e melhora a previsibilidade da operação.</p>
               </div>
-              <div className="border border-gray-200 rounded-lg px-4 py-3 text-left">
+              <div className="border border-gray-300 rounded-lg px-4 py-3 text-left">
                 <p className="text-black text-sm" style={{ fontWeight: 700 }}>Acompanhamento</p>
-                <p className="text-gray-500 text-xs">Todos enxergam o andamento do pedido com mais clareza, do início até a entrega.</p>
+                <p className="text-gray-800 text-xs" style={{ lineHeight: 1.55 }}>Todos enxergam o andamento do pedido com mais clareza, do início até a entrega.</p>
               </div>
             </div>
           </div>
 
-          <div className="border border-gray-200 rounded-xl p-6 bg-gray-50">
-            <p className="text-gray-400 text-xs uppercase tracking-widest mb-2" style={{ fontWeight: 700 }}>
+          <div className="border border-gray-300 rounded-xl p-6 bg-gray-50">
+            <p className="text-gray-700 text-xs uppercase tracking-widest mb-2" style={{ fontWeight: 700 }}>
               Busca rápida
             </p>
             <h3 className="text-black mb-2" style={{ fontSize: "1.15rem", fontWeight: 700 }}>
               Rastrear pedido por código
             </h3>
-            <p className="text-gray-500 text-sm mb-4">
+            <p className="text-gray-800 text-sm mb-4" style={{ lineHeight: 1.55 }}>
               Informe o código do pedido e abra direto a timeline do paciente.
             </p>
             <form onSubmit={handleTrackOrder} className="space-y-3">
@@ -316,7 +316,7 @@ export default function HomePage() {
       {/* How it works */}
       <section id="como-funciona" className="max-w-7xl mx-auto px-6 py-24 fi-animate-in">
         <div className="mb-14">
-          <p className="text-gray-400 text-sm uppercase tracking-widest mb-3" style={{ fontWeight: 600 }}>
+          <p className="text-gray-700 text-sm uppercase tracking-widest mb-3" style={{ fontWeight: 700 }}>
             Fluxo
           </p>
           <h2
@@ -330,18 +330,18 @@ export default function HomePage() {
           {steps.map((step) => (
             <div
               key={step.num}
-              className="border border-gray-200 rounded-lg p-6 bg-white hover:border-black transition-colors"
+              className="border border-gray-300 rounded-lg p-6 bg-white hover:border-black transition-colors"
             >
               <p
-                className="text-gray-200 mb-4"
+                className="text-gray-300 mb-4"
                 style={{ fontSize: "3rem", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1 }}
               >
                 {step.num}
               </p>
-              <h3 className="text-black mb-2" style={{ fontSize: "0.9375rem", fontWeight: 600 }}>
+              <h3 className="text-black mb-2" style={{ fontSize: "0.9375rem", fontWeight: 700 }}>
                 {step.title}
               </h3>
-              <p className="text-gray-500 text-sm" style={{ lineHeight: 1.6 }}>
+              <p className="text-gray-800 text-sm" style={{ lineHeight: 1.6 }}>
                 {step.desc}
               </p>
             </div>
@@ -353,7 +353,7 @@ export default function HomePage() {
       <section id="beneficios" className="bg-black fi-animate-in">
         <div className="max-w-7xl mx-auto px-6 py-24">
           <div className="mb-14">
-            <p className="text-gray-400 text-sm uppercase tracking-widest mb-3" style={{ fontWeight: 600 }}>
+            <p className="text-gray-200 text-sm uppercase tracking-widest mb-3" style={{ fontWeight: 700 }}>
               Benefícios
             </p>
             <h2
@@ -386,7 +386,7 @@ export default function HomePage() {
       {/* Testimonials */}
       <section id="depoimentos" className="max-w-7xl mx-auto px-6 py-24 fi-animate-in">
         <div className="mb-14">
-          <p className="text-gray-400 text-sm uppercase tracking-widest mb-3" style={{ fontWeight: 600 }}>
+          <p className="text-gray-700 text-sm uppercase tracking-widest mb-3" style={{ fontWeight: 700 }}>
             Depoimentos
           </p>
           <h2
@@ -395,7 +395,7 @@ export default function HomePage() {
           >
             Quem usa, recomenda
           </h2>
-          <p className="text-gray-500 mt-3 max-w-xl" style={{ lineHeight: 1.7 }}>
+          <p className="text-gray-700 mt-3 max-w-xl" style={{ lineHeight: 1.7 }}>
             Nutricionistas e clínicas que organizaram a operação e ganharam tempo com o FastInBox.
           </p>
         </div>
@@ -417,7 +417,7 @@ export default function HomePage() {
                 </div>
                 <div className="min-w-0">
                   <p className="text-black text-sm" style={{ fontWeight: 700 }}>{t.name}</p>
-                  <p className="text-gray-500 text-xs truncate">{t.role}</p>
+                  <p className="text-gray-700 text-xs truncate" style={{ fontWeight: 500 }}>{t.role}</p>
                 </div>
               </div>
             </article>
@@ -429,7 +429,7 @@ export default function HomePage() {
       <section id="faq" className="bg-gray-50 border-y border-gray-100 fi-animate-in">
         <div className="max-w-3xl mx-auto px-6 py-24">
           <div className="mb-14 text-center">
-            <p className="text-gray-400 text-sm uppercase tracking-widest mb-3" style={{ fontWeight: 600 }}>
+            <p className="text-gray-700 text-sm uppercase tracking-widest mb-3" style={{ fontWeight: 700 }}>
               Perguntas frequentes
             </p>
             <h2
@@ -438,7 +438,7 @@ export default function HomePage() {
             >
               O que você precisa saber
             </h2>
-            <p className="text-gray-500 mt-3 max-w-xl mx-auto" style={{ lineHeight: 1.7 }}>
+            <p className="text-gray-700 mt-3 max-w-xl mx-auto" style={{ lineHeight: 1.7 }}>
               Respostas diretas para as dúvidas mais comuns sobre a plataforma.
             </p>
           </div>
@@ -448,7 +448,7 @@ export default function HomePage() {
               return (
                 <article
                   key={faq.question}
-                  className={`border rounded-xl bg-white transition-colors ${isOpen ? "border-black" : "border-gray-200"}`}
+                  className={`border rounded-xl bg-white transition-colors ${isOpen ? "border-black" : "border-gray-300"}`}
                 >
                   <button
                     onClick={() => setOpenFaq(isOpen ? null : idx)}
@@ -459,14 +459,14 @@ export default function HomePage() {
                       {faq.question}
                     </span>
                     {isOpen ? (
-                      <Minus className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                      <Minus className="w-4 h-4 text-gray-800 flex-shrink-0" />
                     ) : (
-                      <Plus className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                      <Plus className="w-4 h-4 text-gray-700 flex-shrink-0" />
                     )}
                   </button>
                   {isOpen && (
                     <div className="px-5 pb-5">
-                      <p className="text-gray-600 text-sm" style={{ lineHeight: 1.7 }}>
+                      <p className="text-gray-800 text-sm" style={{ lineHeight: 1.7 }}>
                         {faq.answer}
                       </p>
                     </div>
@@ -482,7 +482,7 @@ export default function HomePage() {
       <section id="contato" className="max-w-7xl mx-auto px-6 py-24 fi-animate-in">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           <div className="lg:col-span-2">
-            <p className="text-gray-400 text-sm uppercase tracking-widest mb-3" style={{ fontWeight: 600 }}>
+            <p className="text-gray-700 text-sm uppercase tracking-widest mb-3" style={{ fontWeight: 700 }}>
               Fale com a gente
             </p>
             <h2
@@ -491,7 +491,7 @@ export default function HomePage() {
             >
               Pronto para atender melhor seus pacientes?
             </h2>
-            <p className="text-gray-500" style={{ lineHeight: 1.7 }}>
+            <p className="text-gray-800" style={{ lineHeight: 1.7 }}>
               Nossa equipe ajuda sua clínica a iniciar a operação e tirar qualquer dúvida sobre personalização,
               pagamentos, produção e entrega.
             </p>
@@ -499,23 +499,23 @@ export default function HomePage() {
           <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4">
             <a
               href="mailto:contato@fastinbox.com.br"
-              className="border border-gray-200 rounded-xl p-6 bg-white hover:border-black transition-colors block"
+              className="border border-gray-300 rounded-xl p-6 bg-white hover:border-black transition-colors block"
             >
               <Mail className="w-5 h-5 text-black mb-4" />
               <p className="text-black text-sm mb-1" style={{ fontWeight: 700 }}>E-mail</p>
-              <p className="text-gray-500 text-sm">contato@fastinbox.com.br</p>
-              <p className="text-gray-400 text-xs mt-3">Respondemos em até 1 dia útil.</p>
+              <p className="text-gray-800 text-sm" style={{ fontWeight: 500 }}>contato@fastinbox.com.br</p>
+              <p className="text-gray-700 text-xs mt-3">Respondemos em até 1 dia útil.</p>
             </a>
             <a
               href="https://wa.me/5511999999999"
               target="_blank"
               rel="noopener noreferrer"
-              className="border border-gray-200 rounded-xl p-6 bg-white hover:border-black transition-colors block"
+              className="border border-gray-300 rounded-xl p-6 bg-white hover:border-black transition-colors block"
             >
               <MessageCircle className="w-5 h-5 text-black mb-4" />
               <p className="text-black text-sm mb-1" style={{ fontWeight: 700 }}>WhatsApp</p>
-              <p className="text-gray-500 text-sm">Atendimento comercial</p>
-              <p className="text-gray-400 text-xs mt-3">Seg a Sex · 9h às 18h.</p>
+              <p className="text-gray-800 text-sm" style={{ fontWeight: 500 }}>Atendimento comercial</p>
+              <p className="text-gray-700 text-xs mt-3">Seg a Sex · 9h às 18h.</p>
             </a>
             <button
               onClick={() => navigate("/login?role=nutricionista")}
@@ -523,7 +523,7 @@ export default function HomePage() {
             >
               <ArrowRight className="w-5 h-5 text-white mb-4" />
               <p className="text-white text-sm mb-1" style={{ fontWeight: 700 }}>Criar conta agora</p>
-              <p className="text-gray-300 text-sm">Comece a usar a plataforma em minutos, sem instalação.</p>
+              <p className="text-gray-200 text-sm">Comece a usar a plataforma em minutos, sem instalação.</p>
             </button>
           </div>
         </div>
@@ -538,7 +538,7 @@ export default function HomePage() {
           >
             Pronto para começar?
           </h2>
-          <p className="text-gray-500 mb-8 max-w-md mx-auto">
+          <p className="text-gray-800 mb-8 max-w-md mx-auto" style={{ lineHeight: 1.6 }}>
             Configure sua clínica em minutos e comece a vender marmitas personalizadas com sua própria marca.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -577,7 +577,7 @@ export default function HomePage() {
             </div>
             <span className="text-black text-sm leading-none" style={{ fontWeight: 700, letterSpacing: "-0.02em" }}>FastInBox</span>
           </button>
-          <p className="text-gray-400 text-sm">
+          <p className="text-gray-700 text-sm">
             © 2026 FastInBox. Marmitas personalizadas com a marca da sua clínica.
           </p>
           <div className="flex items-center gap-6">
@@ -585,7 +585,8 @@ export default function HomePage() {
               href="https://fastinbox-repo.github.io/docs/documents/termos-legais.html"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-400 hover:text-black text-sm transition-colors"
+              className="text-gray-700 hover:text-black text-sm transition-colors"
+              style={{ fontWeight: 500 }}
             >
               Termos
             </a>
@@ -593,7 +594,8 @@ export default function HomePage() {
               href="https://fastinbox-repo.github.io/docs/documents/termos-legais.html"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-400 hover:text-black text-sm transition-colors"
+              className="text-gray-700 hover:text-black text-sm transition-colors"
+              style={{ fontWeight: 500 }}
             >
               Privacidade
             </a>

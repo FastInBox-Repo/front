@@ -32,7 +32,7 @@ export default function NutricionistaLayout() {
       {/* Sidebar */}
       <aside className="w-64 bg-black flex flex-col flex-shrink-0 fi-animate-in fi-delay-1">
         {/* Logo */}
-        <div className="px-6 py-6 border-b border-gray-800">
+        <div className="px-6 py-6 border-b border-gray-700">
           <button onClick={() => navigate("/")} className="flex items-center gap-3" aria-label="Ir para home FastInBox">
             <div className="w-8 h-8 bg-white rounded-sm flex items-center justify-center">
               <Box className="w-4 h-4 text-black" />
@@ -41,23 +41,24 @@ export default function NutricionistaLayout() {
               <p className="text-white text-sm" style={{ fontWeight: 700, letterSpacing: "-0.02em" }}>
                 FastInBox
               </p>
-              <p className="text-gray-500 text-xs">Nutricionista</p>
+              <p className="text-gray-200 text-xs" style={{ fontWeight: 500 }}>Nutricionista</p>
             </div>
           </button>
           <a
             href="https://fastinbox-repo.github.io/docs/"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-3 inline-flex text-xs text-gray-400 hover:text-white transition-colors"
+            className="mt-3 inline-flex text-xs text-gray-200 hover:text-white transition-colors"
+            style={{ fontWeight: 500 }}
           >
             Central de ajuda
           </a>
         </div>
 
         {/* Clinic info */}
-        <div className="px-6 py-4 border-b border-gray-800">
-          <p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Clínica</p>
-          <p className="text-white text-sm" style={{ fontWeight: 500 }}>
+        <div className="px-6 py-4 border-b border-gray-700">
+          <p className="text-gray-200 text-xs uppercase tracking-wider mb-1" style={{ fontWeight: 600 }}>Clínica</p>
+          <p className="text-white text-sm" style={{ fontWeight: 600 }}>
             {clinicName}
           </p>
         </div>
@@ -72,9 +73,10 @@ export default function NutricionistaLayout() {
                 `flex items-center gap-3 px-3 py-2.5 rounded-md text-sm transition-colors ${
                   isActive
                     ? "bg-white text-black"
-                    : "text-gray-400 hover:text-white hover:bg-gray-800"
+                    : "text-gray-200 hover:text-white hover:bg-gray-800"
                 }`
               }
+              style={{ fontWeight: 500 }}
             >
               <Icon className="w-4 h-4 flex-shrink-0" />
               {label}
@@ -83,30 +85,31 @@ export default function NutricionistaLayout() {
         </nav>
 
         {/* User */}
-        <div className="px-3 py-4 border-t border-gray-800">
+        <div className="px-3 py-4 border-t border-gray-700">
           <div
             className="flex items-center gap-3 px-3 py-2.5 rounded-md cursor-pointer hover:bg-gray-800 transition-colors"
             onClick={() => setProfileOpen(!profileOpen)}
           >
             <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center flex-shrink-0">
-              <span className="text-white text-xs" style={{ fontWeight: 600 }}>
+              <span className="text-white text-xs" style={{ fontWeight: 700 }}>
                 {nutritionistName.split(" ").map((w) => w[0]).slice(0, 2).join("")}
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-white text-xs truncate" style={{ fontWeight: 500 }}>
+              <p className="text-white text-xs truncate" style={{ fontWeight: 600 }}>
                 {nutritionistName}
               </p>
-              <p className="text-gray-500 text-xs">{nutritionistCRN}</p>
+              <p className="text-gray-200 text-xs" style={{ fontWeight: 500 }}>{nutritionistCRN}</p>
             </div>
-            <ChevronDown className="w-3.5 h-3.5 text-gray-500" />
+            <ChevronDown className="w-3.5 h-3.5 text-gray-200" />
           </div>
           <button
             onClick={() => {
               sprintStoreActions.logout();
               navigate("/login?role=nutricionista");
             }}
-            className="mt-1 flex items-center gap-3 px-3 py-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 transition-colors text-sm w-full"
+            className="mt-1 flex items-center gap-3 px-3 py-2 rounded-md text-gray-200 hover:text-white hover:bg-gray-800 transition-colors text-sm w-full"
+            style={{ fontWeight: 500 }}
           >
             <LogOut className="w-4 h-4" />
             Sair

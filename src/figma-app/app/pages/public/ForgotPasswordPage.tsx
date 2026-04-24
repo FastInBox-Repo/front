@@ -34,7 +34,7 @@ export default function ForgotPasswordPage() {
                 <CheckCircle className="w-6 h-6 text-black" />
               </div>
               <h2 style={{ fontWeight: 700, letterSpacing: "-0.02em" }} className="mb-2">E-mail enviado</h2>
-              <p className="text-gray-500 text-sm mb-6">
+              <p className="text-gray-800 text-sm mb-6" style={{ lineHeight: 1.55 }}>
                 Verifique sua caixa de entrada. Enviamos um link de recuperação para <strong>{email}</strong>.
               </p>
               <Link
@@ -50,12 +50,12 @@ export default function ForgotPasswordPage() {
               <h1 className="text-black mb-1" style={{ fontWeight: 700, fontSize: "1.25rem", letterSpacing: "-0.03em" }}>
                 Recuperar senha
               </h1>
-              <p className="text-gray-500 text-sm mb-6">
+              <p className="text-gray-800 text-sm mb-6" style={{ lineHeight: 1.55 }}>
                 Informe seu e-mail e enviaremos um link para redefinir sua senha.
               </p>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm text-gray-700 mb-1.5" style={{ fontWeight: 500 }}>
+                  <label className="block text-sm text-gray-900 mb-1.5" style={{ fontWeight: 600 }}>
                     E-mail
                   </label>
                   <input
@@ -63,7 +63,7 @@ export default function ForgotPasswordPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="seu@email.com.br"
-                    className="w-full border border-gray-200 rounded-md px-3.5 py-2.5 text-sm focus:outline-none focus:border-black transition-colors"
+                    className="w-full border border-gray-300 rounded-md px-3.5 py-2.5 text-sm focus:outline-none focus:border-black transition-colors"
                   />
                 </div>
                 <button
@@ -81,7 +81,7 @@ export default function ForgotPasswordPage() {
 
         <Link
           to="/login"
-          className="flex items-center justify-center gap-1.5 text-sm text-gray-500 hover:text-black transition-colors mt-6"
+          className="flex items-center justify-center gap-1.5 text-sm text-gray-700 hover:text-black transition-colors mt-6" style={{ fontWeight: 500 }}
         >
           <ArrowLeft className="w-3.5 h-3.5" /> Voltar ao login
         </Link>

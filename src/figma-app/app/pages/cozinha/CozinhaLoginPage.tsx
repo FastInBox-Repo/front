@@ -26,34 +26,34 @@ export default function CozinhaLoginPage() {
           </span>
         </div>
 
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-8">
-          <div className="flex items-center justify-center w-12 h-12 bg-gray-800 rounded-lg mx-auto mb-5">
-            <ChefHat className="w-6 h-6 text-white" />
+        <div className="bg-gray-900 border border-gray-700 rounded-xl p-8">
+          <div className="flex items-center justify-center w-12 h-12 bg-white rounded-lg mx-auto mb-5">
+            <ChefHat className="w-6 h-6 text-black" />
           </div>
           <h1 className="text-white text-center mb-1" style={{ fontWeight: 700, letterSpacing: "-0.02em" }}>
             Acesso Cozinha
           </h1>
-          <p className="text-gray-500 text-center text-sm mb-6">
+          <p className="text-gray-200 text-center text-sm mb-6" style={{ fontWeight: 500 }}>
             Painel operacional de produção
           </p>
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-sm text-gray-400 mb-1.5" style={{ fontWeight: 500 }}>
+              <label className="block text-sm text-white mb-1.5" style={{ fontWeight: 600 }}>
                 Usuário
               </label>
               <input
                 placeholder="cozinha"
-                className="w-full bg-gray-800 border border-gray-700 rounded-md px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-gray-500 placeholder:text-gray-600"
+                className="w-full bg-gray-800 border border-gray-500 rounded-md px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white placeholder:text-gray-400"
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-1.5" style={{ fontWeight: 500 }}>
+              <label className="block text-sm text-white mb-1.5" style={{ fontWeight: 600 }}>
                 Senha
               </label>
               <input
                 type="password"
                 placeholder="••••••••"
-                className="w-full bg-gray-800 border border-gray-700 rounded-md px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-gray-500"
+                className="w-full bg-gray-800 border border-gray-500 rounded-md px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white placeholder:text-gray-400"
               />
             </div>
             <button

@@ -14,7 +14,6 @@
 
 import { spawn } from "node:child_process";
 import { mkdir, writeFile } from "node:fs/promises";
-import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import net from "node:net";
 import http from "node:http";
@@ -33,7 +32,7 @@ const VIEWPORT_MOBILE = { width: 420, height: 820 };
 const SPRINT_STATE_KEY = "fastinbox-sprint1-state-v1";
 const AUDIT_KEY = "fastinbox-sprint2-audit-v1";
 
-const nowIso = () => new Date().toISOString();
+const _nowIso = () => new Date().toISOString();
 
 const seedAudit = [
   {
@@ -152,7 +151,7 @@ async function cdpFetch(path) {
   });
 }
 
-async function cdpPut(path) {
+async function _cdpPut(path) {
   return new Promise((resolveFetch, reject) => {
     const req = http.request(
       { host: "127.0.0.1", port: DEBUG_PORT, path, method: "PUT" },

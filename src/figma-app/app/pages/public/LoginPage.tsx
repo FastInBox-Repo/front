@@ -118,7 +118,7 @@ export default function LoginPage() {
           >
             A plataforma que conecta nutricionistas, pacientes e cozinhas.
           </p>
-          <p className="text-gray-400" style={{ lineHeight: 1.7 }}>
+          <p className="text-gray-200" style={{ lineHeight: 1.7 }}>
             Marmitas personalizadas com a sua marca. Fluxo completo do pedido à entrega.
           </p>
         </div>
@@ -129,9 +129,9 @@ export default function LoginPage() {
             { value: "180+", label: "Nutricionistas" },
             { value: "98%", label: "Satisfação" },
           ].map((s) => (
-            <div key={s.label} className="border border-gray-800 rounded-lg p-4">
+            <div key={s.label} className="border border-gray-600 rounded-lg p-4 bg-white/5">
               <p className="text-white" style={{ fontSize: "1.5rem", fontWeight: 800 }}>{s.value}</p>
-              <p className="text-gray-500 text-xs mt-1">{s.label}</p>
+              <p className="text-gray-200 text-xs mt-1" style={{ fontWeight: 500 }}>{s.label}</p>
             </div>
           ))}
         </div>
@@ -152,7 +152,7 @@ export default function LoginPage() {
             <h1 className="text-black mb-1" style={{ fontWeight: 700, fontSize: "1.5rem", letterSpacing: "-0.03em" }}>
               {mode === "login" ? "Entrar" : "Criar conta"}
             </h1>
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-700 text-sm">
               {mode === "login"
                 ? "Selecione seu perfil e faça login"
                 : "Cadastro rápido para começar"}
@@ -163,7 +163,7 @@ export default function LoginPage() {
             <button
               onClick={() => setMode("login")}
               className={`px-3 py-2 rounded-md text-sm border transition-all ${
-                mode === "login" ? "bg-black text-white border-black" : "bg-white text-gray-600 border-gray-200"
+                mode === "login" ? "bg-black text-white border-black" : "bg-white text-gray-800 border-gray-300"
               }`}
               style={{ fontWeight: 600 }}
             >
@@ -172,7 +172,7 @@ export default function LoginPage() {
             <button
               onClick={() => setMode("register")}
               className={`px-3 py-2 rounded-md text-sm border transition-all ${
-                mode === "register" ? "bg-black text-white border-black" : "bg-white text-gray-600 border-gray-200"
+                mode === "register" ? "bg-black text-white border-black" : "bg-white text-gray-800 border-gray-300"
               }`}
               style={{ fontWeight: 600 }}
             >
@@ -189,13 +189,13 @@ export default function LoginPage() {
                 className={`px-3 py-2.5 rounded-md border text-sm text-left transition-all ${
                   role === r
                     ? "bg-black text-white border-black"
-                    : "bg-white text-gray-600 border-gray-200 hover:border-gray-400"
+                    : "bg-white text-gray-800 border-gray-300 hover:border-black"
                 }`}
-                style={{ fontWeight: 500 }}
+                style={{ fontWeight: 600 }}
               >
                 {roleConfig[r].label}
-                <span className={`block text-xs mt-0.5 ${role === r ? "text-gray-400" : "text-gray-400"}`}
-                  style={{ fontWeight: 400 }}>
+                <span className={`block text-xs mt-0.5 ${role === r ? "text-gray-200" : "text-gray-600"}`}
+                  style={{ fontWeight: 500 }}>
                   {roleConfig[r].description}
                 </span>
               </button>
@@ -206,7 +206,7 @@ export default function LoginPage() {
             {mode === "register" && (
               <>
                 <div>
-                  <label className="block text-sm text-gray-700 mb-1.5" style={{ fontWeight: 500 }}>
+                  <label className="block text-sm text-gray-900 mb-1.5" style={{ fontWeight: 600 }}>
                     Nome
                   </label>
                   <input
@@ -221,7 +221,7 @@ export default function LoginPage() {
                 {role === "nutricionista" && (
                   <>
                     <div>
-                      <label className="block text-sm text-gray-700 mb-1.5" style={{ fontWeight: 500 }}>
+                      <label className="block text-sm text-gray-900 mb-1.5" style={{ fontWeight: 600 }}>
                         Clínica
                       </label>
                       <input
@@ -233,7 +233,7 @@ export default function LoginPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm text-gray-700 mb-1.5" style={{ fontWeight: 500 }}>
+                      <label className="block text-sm text-gray-900 mb-1.5" style={{ fontWeight: 600 }}>
                         CRN (opcional)
                       </label>
                       <input
@@ -250,7 +250,7 @@ export default function LoginPage() {
                 {role === "paciente" && (
                   <>
                     <div>
-                      <label className="block text-sm text-gray-700 mb-1.5" style={{ fontWeight: 500 }}>
+                      <label className="block text-sm text-gray-900 mb-1.5" style={{ fontWeight: 600 }}>
                         Telefone
                       </label>
                       <input
@@ -262,7 +262,7 @@ export default function LoginPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm text-gray-700 mb-1.5" style={{ fontWeight: 500 }}>
+                      <label className="block text-sm text-gray-900 mb-1.5" style={{ fontWeight: 600 }}>
                         Objetivo nutricional (opcional)
                       </label>
                       <input
@@ -279,7 +279,7 @@ export default function LoginPage() {
             )}
 
             <div>
-              <label className="block text-sm text-gray-700 mb-1.5" style={{ fontWeight: 500 }}>
+              <label className="block text-sm text-gray-900 mb-1.5" style={{ fontWeight: 600 }}>
                 E-mail
               </label>
               <input
@@ -291,7 +291,7 @@ export default function LoginPage() {
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-700 mb-1.5" style={{ fontWeight: 500 }}>
+              <label className="block text-sm text-gray-900 mb-1.5" style={{ fontWeight: 600 }}>
                 Senha
               </label>
               <div className="relative">
@@ -305,13 +305,14 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-black"
+                  aria-label={showPass ? "Ocultar senha" : "Mostrar senha"}
                 >
                   {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
               <div className="mt-1.5 text-right">
-                <Link to="/recuperar-senha" className="text-xs text-gray-500 hover:text-black transition-colors">
+                <Link to="/recuperar-senha" className="text-xs text-gray-700 hover:text-black transition-colors" style={{ fontWeight: 500 }}>
                   Esqueci minha senha
                 </Link>
               </div>
@@ -327,8 +328,8 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <p className="mt-6 text-center text-xs text-gray-400">
-            <Link to="/" className="flex items-center justify-center gap-1 hover:text-black transition-colors">
+          <p className="mt-6 text-center text-xs text-gray-700">
+            <Link to="/" className="flex items-center justify-center gap-1 hover:text-black transition-colors" style={{ fontWeight: 500 }}>
               <ArrowLeft className="w-3 h-3" /> Voltar ao início
             </Link>
           </p>
