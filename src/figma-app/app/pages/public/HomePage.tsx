@@ -76,8 +76,12 @@ export default function HomePage() {
             onClick={() => navigate("/")}
             className="flex items-center gap-3.5"
             aria-label="Ir para a página inicial FastInBox"
+            style={{ border: "none", boxShadow: "none", background: "transparent", padding: 0 }}
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-black">
+            <div
+              className="flex h-9 w-9 items-center justify-center bg-black"
+              style={{ borderRadius: "6px" }}
+            >
               <Box className="h-[18px] w-[18px] text-white" />
             </div>
             <span className="text-black leading-none" style={{ fontWeight: 800, letterSpacing: "-0.03em", fontSize: "1.1rem" }}>
@@ -293,12 +297,13 @@ export default function HomePage() {
               <div
                 key={b.title}
                 className="rounded-lg border border-white/10 bg-white/5 p-6 transition-colors hover:border-white/25"
+                style={{ borderColor: "rgba(255,255,255,0.18)" }}
               >
                 <b.icon className="w-5 h-5 text-white mb-4" />
                 <h3 className="text-white mb-2" style={{ fontSize: "0.9375rem", fontWeight: 600 }}>
                   {b.title}
                 </h3>
-                <p className="text-gray-200 text-sm" style={{ lineHeight: 1.7 }}>
+                <p className="text-sm" style={{ lineHeight: 1.7, color: "rgba(255,255,255,0.82)" }}>
                   {b.desc}
                 </p>
               </div>
@@ -341,8 +346,16 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="border-t border-gray-100 fi-animate-in">
         <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <button onClick={() => navigate("/")} className="flex items-center gap-3" aria-label="Voltar para o topo">
-            <div className="flex h-7 w-7 items-center justify-center rounded-sm bg-black">
+          <button
+            onClick={() => navigate("/")}
+            className="flex items-center gap-3"
+            aria-label="Voltar para o topo"
+            style={{ border: "none", boxShadow: "none", background: "transparent", padding: 0 }}
+          >
+            <div
+              className="flex h-7 w-7 items-center justify-center bg-black"
+              style={{ borderRadius: "6px" }}
+            >
               <Box className="h-3.5 w-3.5 text-white" />
             </div>
             <span className="text-black text-sm leading-none" style={{ fontWeight: 700, letterSpacing: "-0.02em" }}>FastInBox</span>
