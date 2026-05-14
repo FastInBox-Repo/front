@@ -38,7 +38,7 @@ export default function PacientesPage() {
     setLoading(true);
     await new Promise((r) => setTimeout(r, 800));
     setLoading(false);
-    sprintStoreActions.createPatient({
+    await sprintStoreActions.createPatient({
       ...form,
     });
     setShowModal(false);

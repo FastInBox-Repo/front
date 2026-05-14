@@ -68,7 +68,7 @@ export default function PagamentoPage() {
     await new Promise((r) => setTimeout(r, 900));
     setProgress("confirmando");
     await new Promise((r) => setTimeout(r, 600));
-    sprintStoreActions.markOrderAsPaid(code || "", method);
+    await sprintStoreActions.markOrderAsPaid(code || "", method);
     setProgress("sucesso");
     toast.success("Pagamento confirmado! Seu pedido entrou na fila de produção.");
     setLoading(false);

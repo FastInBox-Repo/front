@@ -45,11 +45,11 @@ export default function CozinhaPedidoPage() {
 
   const currentStatus = status || order.status;
 
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
     const next = NEXT_STATUS[currentStatus];
     if (!next) return;
     setStatus(next);
-    sprintStoreActions.updateOrderStatus(order.id, next);
+    await sprintStoreActions.updateOrderStatus(order.id, next);
     toast.success(NEXT_LABEL[currentStatus] + "!");
   };
 

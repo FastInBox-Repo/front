@@ -49,7 +49,7 @@ export default function LoginPage() {
     }
     setLoading(true);
     await new Promise((r) => setTimeout(r, 1000));
-    const user = sprintStoreActions.login(email, password, role);
+    const user = await sprintStoreActions.login(email, password, role);
     setLoading(false);
 
     if (!user) {

@@ -157,9 +157,9 @@ export default function AdminDiagnosticoPage() {
 
     await runStep("auth", async () => {
       await wait(300);
-      const user = sprintStoreActions.login(
-        "ana@nutritionvida.com.br",
-        "123456",
+      const user = await sprintStoreActions.login(
+        "nutri@fastinbox.local",
+        "nutri123",
         "nutricionista",
       );
       if (!user) {
@@ -174,7 +174,7 @@ export default function AdminDiagnosticoPage() {
     let smokePatientId: string | null = null;
     await runStep("patient", async () => {
       await wait(250);
-      const patient = sprintStoreActions.createPatient({
+      const patient = await sprintStoreActions.createPatient({
         name: `Smoke Test ${new Date().toISOString().slice(11, 19)}`,
         email: `smoke-${Date.now()}@fastinbox.test`,
         phone: "(11) 00000-0000",
@@ -193,7 +193,7 @@ export default function AdminDiagnosticoPage() {
       if (!smokePatientId) {
         throw new Error("Paciente de teste não disponível.");
       }
-      const order = sprintStoreActions.createOrder({
+      const order = await sprintStoreActions.createOrder({
         patientId: smokePatientId,
         nutritionistId: "nut-1",
         nutritionistName: "Dra. Ana Carvalho",
@@ -232,7 +232,7 @@ export default function AdminDiagnosticoPage() {
       if (!smokeOrder) {
         throw new Error("Pedido de teste não disponível.");
       }
-      sprintStoreActions.markOrderAsPaid(smokeOrder.code, "pix");
+      await sprintStoreActions.markOrderAsPaid(smokeOrder.code, "pix");
       return `${smokeOrder.code} marcado como pago via PIX.`;
     });
 
@@ -241,7 +241,7 @@ export default function AdminDiagnosticoPage() {
       if (!smokeOrder) {
         throw new Error("Pedido de teste não disponível.");
       }
-      sprintStoreActions.updateOrderStatus(smokeOrder.id, "em_producao");
+      await sprintStoreActions.updateOrderStatus(smokeOrder.id, "em_producao");
       return `${smokeOrder.code}: ${statusLabels.pago} -> ${statusLabels.em_producao}.`;
     });
 

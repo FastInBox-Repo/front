@@ -40,12 +40,12 @@ export default function CozinhaDashboardPage() {
     setLastSyncAt(new Date());
   }, [orders]);
 
-  const handleDrop = (targetStatus: OrderStatus) => {
+  const handleDrop = async (targetStatus: OrderStatus) => {
     if (!draggingOrderId) {
       return;
     }
 
-    sprintStoreActions.updateOrderStatus(draggingOrderId, targetStatus);
+    await sprintStoreActions.updateOrderStatus(draggingOrderId, targetStatus);
     const label = statusLabels[targetStatus] || targetStatus;
     toast.success(`Pedido movido para ${label}`);
     setDraggingOrderId(null);

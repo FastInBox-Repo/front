@@ -148,7 +148,7 @@ export default function NovoPedidoPage() {
 
     setSubmitting(true);
     await new Promise((r) => setTimeout(r, 1200));
-    const createdOrder = sprintStoreActions.createOrder({
+    const createdOrder = await sprintStoreActions.createOrder({
       patientId: selectedPatientId,
       nutritionistId: currentUser.id,
       nutritionistName: currentUser.name,
