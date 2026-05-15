@@ -6,6 +6,11 @@ export function AppToaster() {
   return (
     <Toaster
       position="top-right"
+      richColors
+      closeButton
+      visibleToasts={5}
+      duration={5000}
+      gap={12}
       toastOptions={{
         style: {
           background: "#0a0a0a",

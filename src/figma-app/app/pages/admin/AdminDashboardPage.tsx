@@ -53,19 +53,19 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="p-8">
-      <div className="mb-8">
+      <header className="mb-8">
         <h1 style={{ fontWeight: 800, fontSize: "1.5rem", letterSpacing: "-0.03em" }}>
           Administração
         </h1>
-        <p className="text-gray-500 text-sm mt-0.5">Visão geral da operação FastInBox</p>
-      </div>
+        <p className="text-gray-700 text-sm mt-0.5">Visão geral da operação FastInBox</p>
+      </header>
 
       {/* Metrics */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+      <section aria-label="Indicadores principais" className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
         {metrics.map((m) => (
-          <div key={m.label} className="bg-white border border-gray-200 rounded-lg p-5">
+          <article key={m.label} className="bg-white border border-gray-200 rounded-lg p-5" aria-label={`${m.label}: ${m.value}`}>
             <div className="flex items-center justify-between mb-4">
-              <m.icon className="w-4 h-4 text-gray-400" />
+              <m.icon className="w-4 h-4 text-gray-700" aria-hidden="true" focusable="false" />
             </div>
             <p
               className="text-black mb-0.5"
@@ -73,19 +73,23 @@ export default function AdminDashboardPage() {
             >
               {m.value}
             </p>
-            <p className="text-gray-500 text-xs mb-0.5">{m.label}</p>
-            <p className="text-gray-300 text-xs">{m.sub}</p>
-          </div>
+            <p className="text-gray-700 text-xs mb-0.5">{m.label}</p>
+            <p className="text-gray-700 text-xs">{m.sub}</p>
+          </article>
         ))}
-      </div>
+      </section>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
         {/* Chart */}
         <div className="xl:col-span-2 bg-white border border-gray-200 rounded-lg p-5">
           <div className="flex items-center justify-between mb-5">
-            <h2 style={{ fontWeight: 600, fontSize: "0.9375rem" }}>Pedidos por dia (esta semana)</h2>
-            <BarChart3 className="w-4 h-4 text-gray-400" />
+            <h2 style={{ fontWeight: 600, fontSize: "0.9375rem" }} id="weekly-chart-title">Pedidos por dia (esta semana)</h2>
+            <BarChart3 className="w-4 h-4 text-gray-700" aria-hidden="true" focusable="false" />
           </div>
+          <div role="img" aria-labelledby="weekly-chart-title" aria-describedby="weekly-chart-desc">
+            <p id="weekly-chart-desc" className="sr-only">
+              Gráfico de barras com o total de pedidos por dia da semana. {chartData.map((d) => `${d.dia}: ${d.pedidos} pedidos`).join(", ")}.
+            </p>
           <ResponsiveContainer width="100%" height={180}>
             <BarChart data={chartData} barSize={24}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f5f5f5" vertical={false} />
@@ -98,6 +102,7 @@ export default function AdminDashboardPage() {
               <Bar dataKey="pedidos" fill="#0a0a0a" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
+          </div>
         </div>
 
         {/* Status breakdown */}
@@ -118,13 +123,21 @@ export default function AdminDashboardPage() {
               return (
                 <div key={status}>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-600">{label}</span>
+                    <span className="text-gray-900">{label}</span>
                     <span className="text-black" style={{ fontWeight: 600 }}>{count}</span>
                   </div>
-                  <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-1.5 bg-gray-100 rounded-full overflow-hidden"
+                    role="progressbar"
+                    aria-label={`${label}: ${count} pedidos (${pct}%)`}
+                    aria-valuenow={pct}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                  >
                     <div
                       className="h-full bg-black rounded-full"
                       style={{ width: `${pct}%` }}
+                      aria-hidden="true"
                     />
                   </div>
                 </div>
@@ -135,30 +148,32 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Recent audit events */}
-      <div className="bg-white border border-gray-200 rounded-lg mb-6">
+      <section className="bg-white border border-gray-200 rounded-lg mb-6" aria-labelledby="audit-title">
         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-2">
-            <Activity className="w-4 h-4 text-gray-400" />
-            <h2 style={{ fontWeight: 600, fontSize: "0.9375rem" }}>Eventos recentes</h2>
+            <Activity className="w-4 h-4 text-gray-700" aria-hidden="true" focusable="false" />
+            <h2 id="audit-title" style={{ fontWeight: 600, fontSize: "0.9375rem" }}>Eventos recentes</h2>
           </div>
           <button
             onClick={() => navigate("/admin/auditoria")}
-            className="text-xs text-gray-500 hover:text-black flex items-center gap-1 transition-colors"
+            className="text-xs text-gray-900 hover:text-black flex items-center gap-1 transition-colors"
+            type="button"
+            aria-label="Abrir página de auditoria"
           >
-            Abrir auditoria <ChevronRight className="w-3 h-3" />
+            Abrir auditoria <ChevronRight className="w-3 h-3" aria-hidden="true" focusable="false" />
           </button>
         </div>
         {recentEvents.length === 0 ? (
           <div className="px-6 py-8 text-center">
-            <p className="text-sm text-gray-500" style={{ fontWeight: 500 }}>
+            <p className="text-sm text-gray-900" style={{ fontWeight: 500 }}>
               Nenhum evento registrado ainda.
             </p>
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-gray-700 mt-1">
               Faça login, crie um pedido ou movimente um status para começar o histórico.
             </p>
           </div>
         ) : (
-          <ul className="divide-y divide-gray-50">
+          <ul className="divide-y divide-gray-50 list-none p-0 m-0">
             {recentEvents.map((event) => (
               <li key={event.id} className="px-6 py-3 flex items-center justify-between gap-3 flex-wrap">
                 <div className="min-w-0 flex-1">
@@ -167,39 +182,42 @@ export default function AdminDashboardPage() {
                       {auditLabels[event.type] ?? event.type}
                     </span>
                     {event.targetCode && (
-                      <span className="text-[10px] font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded" style={{ fontWeight: 600 }}>
+                      <span className="text-[10px] font-mono bg-gray-100 text-gray-900 px-1.5 py-0.5 rounded" style={{ fontWeight: 600 }}>
                         {event.targetCode}
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-gray-500 truncate">{event.description}</p>
+                  <p className="text-xs text-gray-900 truncate">{event.description}</p>
                 </div>
-                <span className="text-[10px] text-gray-400 flex-shrink-0">
+                <time className="text-[10px] text-gray-700 shrink-0" dateTime={new Date(event.createdAt).toISOString()}>
                   {formatAuditTimeAgo(event.createdAt)}
-                </span>
+                </time>
               </li>
             ))}
           </ul>
         )}
-      </div>
+      </section>
 
       {/* Recent orders table */}
-      <div className="bg-white border border-gray-200 rounded-lg">
+      <section className="bg-white border border-gray-200 rounded-lg" aria-labelledby="orders-table-title">
         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-          <h2 style={{ fontWeight: 600, fontSize: "0.9375rem" }}>Todos os pedidos</h2>
+          <h2 id="orders-table-title" style={{ fontWeight: 600, fontSize: "0.9375rem" }}>Todos os pedidos</h2>
           <button
             onClick={() => navigate("/admin/pedidos")}
-            className="text-xs text-gray-500 hover:text-black flex items-center gap-1 transition-colors"
+            className="text-xs text-gray-900 hover:text-black flex items-center gap-1 transition-colors"
+            type="button"
+            aria-label="Ver todos os pedidos"
           >
-            Ver tudo <ChevronRight className="w-3 h-3" />
+            Ver tudo <ChevronRight className="w-3 h-3" aria-hidden="true" focusable="false" />
           </button>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
+            <caption className="sr-only">Lista de todos os pedidos com código, paciente, clínica, nutricionista, data, valor e status.</caption>
             <thead>
               <tr className="border-b border-gray-50">
                 {["Código", "Paciente", "Clínica", "Nutricionista", "Data", "Valor", "Status"].map((h) => (
-                  <th key={h} className="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider" style={{ fontWeight: 600 }}>
+                  <th key={h} scope="col" className="px-4 py-3 text-left text-xs text-gray-900 uppercase tracking-wider" style={{ fontWeight: 600 }}>
                     {h}
                   </th>
                 ))}
@@ -208,11 +226,11 @@ export default function AdminDashboardPage() {
             <tbody className="divide-y divide-gray-50">
               {orders.map((o) => (
                 <tr key={o.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-4 py-3 text-sm font-mono" style={{ fontWeight: 600 }}>{o.code}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700">{o.patientName}</td>
-                  <td className="px-4 py-3 text-sm text-gray-500 max-w-[140px] truncate">{o.clinicName}</td>
-                  <td className="px-4 py-3 text-sm text-gray-500">{o.nutritionistName}</td>
-                  <td className="px-4 py-3 text-sm text-gray-400">{formatDate(o.createdAt)}</td>
+                  <th scope="row" className="px-4 py-3 text-sm font-mono text-left" style={{ fontWeight: 600 }}>{o.code}</th>
+                  <td className="px-4 py-3 text-sm text-gray-900">{o.patientName}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 max-w-[140px] truncate">{o.clinicName}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900">{o.nutritionistName}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900">{formatDate(o.createdAt)}</td>
                   <td className="px-4 py-3 text-sm" style={{ fontWeight: 600 }}>{formatCurrency(o.finalPrice)}</td>
                   <td className="px-4 py-3">
                     <StatusBadge status={o.status} />
@@ -222,7 +240,7 @@ export default function AdminDashboardPage() {
             </tbody>
           </table>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

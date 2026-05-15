@@ -34,8 +34,8 @@ export default function PedidoResumoPage() {
 
   if (!order) {
     return (
-      <div className="p-8">
-        <p className="text-gray-500 text-sm">Nenhum pedido encontrado.</p>
+      <div className="p-8" role="alert">
+        <p className="text-gray-900 text-sm">Nenhum pedido encontrado.</p>
       </div>
     );
   }
@@ -49,172 +49,187 @@ export default function PedidoResumoPage() {
 
   return (
     <div className="p-8 max-w-4xl">
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-8">
+      <header className="flex items-center gap-3 mb-8">
         <button
           onClick={() => navigate("/nutricionista/dashboard")}
-          className="text-gray-400 hover:text-black transition-colors"
+          className="text-gray-700 hover:text-black transition-colors"
+          type="button"
+          aria-label="Voltar ao dashboard"
         >
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="w-5 h-5" aria-hidden="true" focusable="false" />
         </button>
         <div className="flex-1">
           <div className="flex items-center gap-3">
             <h1 style={{ fontWeight: 800, fontSize: "1.5rem", letterSpacing: "-0.03em" }}>
+              <span className="sr-only">Pedido </span>
               {order.code}
             </h1>
             <StatusBadge status={order.status} />
           </div>
-          <p className="text-gray-500 text-sm mt-0.5">Criado em {formatDate(order.createdAt)}</p>
+          <p className="text-gray-900 text-sm mt-0.5">
+            Criado em <time dateTime={new Date(order.createdAt).toISOString()}>{formatDate(order.createdAt)}</time>
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigate(`/paciente/pedido/${order.code}`)}
-            className="flex items-center gap-1.5 border border-gray-200 text-gray-600 px-3 py-2 rounded-md text-sm hover:border-black transition-colors"
+            className="flex items-center gap-1.5 border border-gray-300 text-gray-900 px-3 py-2 rounded-md text-sm hover:border-black transition-colors"
             style={{ fontWeight: 500 }}
+            type="button"
+            aria-label="Pré-visualizar como paciente"
           >
-            <ExternalLink className="w-3.5 h-3.5" /> Prévia
+            <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" focusable="false" /> Prévia
           </button>
           <button
             onClick={handleCopy}
             className="flex items-center gap-1.5 bg-black text-white px-3 py-2 rounded-md text-sm hover:bg-gray-900 transition-colors"
             style={{ fontWeight: 500 }}
+            type="button"
+            aria-label={copied ? "Link copiado" : "Copiar link de acompanhamento"}
           >
-            {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+            {copied ? (
+              <Check className="w-3.5 h-3.5" aria-hidden="true" focusable="false" />
+            ) : (
+              <Copy className="w-3.5 h-3.5" aria-hidden="true" focusable="false" />
+            )}
             {copied ? "Copiado!" : "Copiar link"}
           </button>
         </div>
-      </div>
+      </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Main */}
         <div className="md:col-span-2 space-y-4">
-          {/* Patient */}
-          <div className="bg-white border border-gray-200 rounded-lg p-5">
-            <p className="text-xs text-gray-400 uppercase tracking-wider mb-3" style={{ fontWeight: 600 }}>Paciente</p>
+          <section className="bg-white border border-gray-200 rounded-lg p-5" aria-labelledby="patient-card-title">
+            <h2 id="patient-card-title" className="text-xs text-gray-900 uppercase tracking-wider mb-3" style={{ fontWeight: 600 }}>Paciente</h2>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                <span className="text-gray-600 text-sm" style={{ fontWeight: 600 }}>
+              <span
+                className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center"
+                aria-hidden="true"
+              >
+                <span className="text-gray-900 text-sm" style={{ fontWeight: 600 }}>
                   {order.patientName.split(" ").map((w) => w[0]).slice(0, 2).join("")}
                 </span>
-              </div>
+              </span>
               <div>
-                <p className="text-black" style={{ fontWeight: 600 }}>{order.patientName}</p>
-                <p className="text-gray-400 text-sm">Entrega: {formatDate(order.deliveryDate)}</p>
+                <p className="text-black m-0" style={{ fontWeight: 600 }}>{order.patientName}</p>
+                <p className="text-gray-900 text-sm m-0">Entrega: <time dateTime={order.deliveryDate}>{formatDate(order.deliveryDate)}</time></p>
               </div>
             </div>
-          </div>
+          </section>
 
-          {/* Items */}
           {order.items.map((item) => (
-            <div key={item.id} className="bg-white border border-gray-200 rounded-lg p-5">
+            <section key={item.id} className="bg-white border border-gray-200 rounded-lg p-5" aria-labelledby={`item-${item.id}-title`}>
               <div className="flex items-center justify-between mb-4">
-                <p className="text-black" style={{ fontWeight: 600 }}>{item.name}</p>
+                <h2 id={`item-${item.id}-title`} className="text-black m-0" style={{ fontWeight: 600 }}>{item.name}</h2>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded border border-gray-200">
+                  <span className="text-xs bg-gray-100 text-gray-900 px-2 py-1 rounded border border-gray-300">
+                    <span className="sr-only">Quantidade: </span>
                     {item.quantity}x
                   </span>
-                  <span className="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded border border-gray-200">
+                  <span className="text-xs bg-gray-100 text-gray-900 px-2 py-1 rounded border border-gray-300">
                     {item.packaging}
                   </span>
                 </div>
               </div>
               <div className="mb-3">
-                <p className="text-xs text-gray-400 uppercase tracking-wider mb-2" style={{ fontWeight: 600 }}>
+                <h3 className="text-xs text-gray-900 uppercase tracking-wider mb-2" style={{ fontWeight: 600 }}>
                   Ingredientes
-                </p>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                </h3>
+                <ul className="grid grid-cols-2 md:grid-cols-3 gap-2 list-none p-0 m-0">
                   {item.ingredients.map((ing) => (
-                    <div key={ing.id} className="flex items-center justify-between border border-gray-100 rounded-md px-2.5 py-2 bg-gray-50">
+                    <li key={ing.id} className="flex items-center justify-between border border-gray-200 rounded-md px-2.5 py-2 bg-gray-50">
                       <div>
-                        <p className="text-black text-xs" style={{ fontWeight: 500 }}>{ing.name}</p>
-                        <p className="text-gray-400 text-xs capitalize">{ing.category}</p>
+                        <p className="text-black text-xs m-0" style={{ fontWeight: 500 }}>{ing.name}</p>
+                        <p className="text-gray-900 text-xs capitalize m-0">{ing.category}</p>
                       </div>
-                      <span className="text-gray-400 text-xs">{ing.quantity}</span>
-                    </div>
+                      <span className="text-gray-900 text-xs">{ing.quantity}</span>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
               {item.observations && (
-                <p className="text-sm text-gray-500 bg-gray-50 border border-gray-100 rounded-md px-3 py-2">
+                <p className="text-sm text-gray-900 bg-gray-50 border border-gray-200 rounded-md px-3 py-2 m-0">
                   Obs: {item.observations}
                 </p>
               )}
-            </div>
+            </section>
           ))}
 
-          {/* Nutritional obs */}
           {order.nutritionalObservations && (
-            <div className="bg-white border border-gray-200 rounded-lg p-5">
-              <p className="text-xs text-gray-400 uppercase tracking-wider mb-2" style={{ fontWeight: 600 }}>
+            <aside className="bg-white border border-gray-200 rounded-lg p-5" aria-labelledby="nutri-obs-title">
+              <h2 id="nutri-obs-title" className="text-xs text-gray-900 uppercase tracking-wider mb-2" style={{ fontWeight: 600 }}>
                 Observações nutricionais
-              </p>
-              <p className="text-gray-600 text-sm" style={{ lineHeight: 1.7 }}>
+              </h2>
+              <p className="text-gray-900 text-sm m-0" style={{ lineHeight: 1.7 }}>
                 {order.nutritionalObservations}
               </p>
-            </div>
+            </aside>
           )}
         </div>
 
-        {/* Sidebar */}
-        <div className="space-y-4">
-          {/* Code */}
-          <div className="bg-black rounded-lg p-5 text-center">
-            <p className="text-gray-400 text-xs mb-2">Código do pedido</p>
-            <p className="text-white" style={{ fontSize: "1.25rem", fontWeight: 900, letterSpacing: "0.08em" }}>
+        <aside className="space-y-4" aria-label="Resumo lateral do pedido">
+          <section className="bg-black rounded-lg p-5 text-center" data-dark-surface aria-labelledby="order-code-label">
+            <p id="order-code-label" className="text-gray-100 text-xs mb-2">Código do pedido</p>
+            <p className="text-white m-0" style={{ fontSize: "1.25rem", fontWeight: 900, letterSpacing: "0.08em" }}>
               {order.code}
             </p>
-          </div>
+          </section>
 
-          {/* Pricing */}
-          <div className="bg-white border border-gray-200 rounded-lg p-5">
-            <p className="text-xs text-gray-400 uppercase tracking-wider mb-3" style={{ fontWeight: 600 }}>Valores</p>
-            <div className="space-y-2">
+          <section className="bg-white border border-gray-200 rounded-lg p-5" aria-labelledby="values-title">
+            <h2 id="values-title" className="text-xs text-gray-900 uppercase tracking-wider mb-3" style={{ fontWeight: 600 }}>Valores</h2>
+            <dl className="space-y-2 m-0">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Preço base</span>
-                <span>{formatCurrency(order.basePrice)}</span>
+                <dt className="text-gray-900">Preço base</dt>
+                <dd className="m-0">{formatCurrency(order.basePrice)}</dd>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Margem</span>
-                <span>{formatCurrency(order.margin)}</span>
+                <dt className="text-gray-900">Margem</dt>
+                <dd className="m-0">{formatCurrency(order.margin)}</dd>
               </div>
               <div className="border-t border-gray-100 pt-2 flex justify-between">
-                <span className="text-black" style={{ fontWeight: 600 }}>Total ao paciente</span>
-                <span className="text-black" style={{ fontWeight: 700 }}>{formatCurrency(order.finalPrice)}</span>
+                <dt className="text-black" style={{ fontWeight: 600 }}>Total ao paciente</dt>
+                <dd className="text-black m-0" style={{ fontWeight: 700 }}>{formatCurrency(order.finalPrice)}</dd>
               </div>
               {order.paidAt && (
-                <p className="text-xs text-gray-400 mt-1">Pago em {formatDate(order.paidAt)}</p>
+                <p className="text-xs text-gray-900 mt-1 m-0">
+                  Pago em <time dateTime={order.paidAt}>{formatDate(order.paidAt)}</time>
+                </p>
               )}
-            </div>
-          </div>
+            </dl>
+          </section>
 
-          {/* Status history */}
-          <div className="bg-white border border-gray-200 rounded-lg p-5">
-            <p className="text-xs text-gray-400 uppercase tracking-wider mb-3" style={{ fontWeight: 600 }}>Status</p>
+          <section className="bg-white border border-gray-200 rounded-lg p-5" aria-labelledby="status-title">
+            <h2 id="status-title" className="text-xs text-gray-900 uppercase tracking-wider mb-3" style={{ fontWeight: 600 }}>Status</h2>
             <StatusBadge status={order.status} />
-            <div className="mt-3 space-y-2">
-              <div className="flex items-center gap-2 text-sm">
-                <div className="w-1.5 h-1.5 rounded-full bg-black" />
-                <span className="text-gray-600">Criado: {formatDate(order.createdAt)}</span>
-              </div>
+            <ol className="mt-3 space-y-2 list-none p-0">
+              <li className="flex items-center gap-2 text-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-black" aria-hidden="true" />
+                <span className="text-gray-900">
+                  Criado: <time dateTime={new Date(order.createdAt).toISOString()}>{formatDate(order.createdAt)}</time>
+                </span>
+              </li>
               {order.paidAt && (
-                <div className="flex items-center gap-2 text-sm">
-                  <div className="w-1.5 h-1.5 rounded-full bg-black" />
-                  <span className="text-gray-600">Pago: {formatDate(order.paidAt)}</span>
-                </div>
+                <li className="flex items-center gap-2 text-sm">
+                  <span className="w-1.5 h-1.5 rounded-full bg-black" aria-hidden="true" />
+                  <span className="text-gray-900">
+                    Pago: <time dateTime={order.paidAt}>{formatDate(order.paidAt)}</time>
+                  </span>
+                </li>
               )}
-            </div>
-          </div>
+            </ol>
+          </section>
 
           <div className="flex flex-col gap-2">
             <button
               onClick={() => navigate(`/paciente/pedido/${order.code}`)}
-              className="flex items-center justify-center gap-2 border border-gray-200 text-gray-700 py-2.5 rounded-md text-sm hover:border-black transition-colors"
+              className="flex items-center justify-center gap-2 border border-gray-300 text-gray-900 py-2.5 rounded-md text-sm hover:border-black transition-colors"
               style={{ fontWeight: 500 }}
+              type="button"
             >
-              <ExternalLink className="w-4 h-4" /> Ver como paciente
+              <ExternalLink className="w-4 h-4" aria-hidden="true" focusable="false" /> Ver como paciente
             </button>
           </div>
-        </div>
+        </aside>
       </div>
     </div>
   );

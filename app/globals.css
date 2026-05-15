@@ -64,6 +64,53 @@
   font-family: var(--font-ibm-plex-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
+/* WCAG 2.4.7 — Universal focus-visible ring on every interactive element. */
+*:focus-visible {
+  outline: 3px solid #000000;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px rgba(255, 215, 0, 0.6);
+}
+
+/* Inverted focus ring for elements on dark backgrounds. */
+.fi-dark-surface *:focus-visible,
+[data-dark-surface] *:focus-visible {
+  outline-color: #ffffff;
+  box-shadow: 0 0 0 6px rgba(255, 215, 0, 0.85);
+}
+
+/* WCAG 1.3.1 — Screen-reader-only utility. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sr-only-focusable:focus,
+.sr-only-focusable:focus-visible {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  width: auto;
+  height: auto;
+  padding: 0.75rem 1.25rem;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+  background: #000000;
+  color: #ffffff;
+  font-weight: 700;
+  z-index: 9999;
+  outline: 3px solid #ffd700;
+  outline-offset: 2px;
+}
+
 html {
   font-size: var(--font-size);
   scroll-behavior: smooth;
@@ -139,6 +186,17 @@ textarea::placeholder {
 [class*="text-gray-500"],
 [class*="text-gray-600"] {
   color: #222222 !important;
+}
+
+/* WCAG 1.4.3 — Boost light-gray text contrast on dark surfaces (>=4.5:1). */
+.bg-black [class*="text-gray-200"],
+.bg-black [class*="text-gray-300"],
+.bg-black [class*="text-gray-400"],
+.bg-gray-900 [class*="text-gray-200"],
+.bg-gray-900 [class*="text-gray-300"],
+[data-dark-surface] [class*="text-gray-200"],
+[data-dark-surface] [class*="text-gray-300"] {
+  color: #e5e7eb !important;
 }
 
 [class*="bg-gray-50"],
@@ -219,5 +277,69 @@ article[class*="border"][class*="bg-white"] {
     animation: none !important;
     transform: none !important;
     opacity: 1 !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* WCAG 1.4.11 — Non-text contrast for forms (>=3:1 against background). */
+input,
+textarea,
+select {
+  border-color: #000000;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  border-color: #000000;
+  outline: 3px solid #000000;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px rgba(255, 215, 0, 0.6);
+}
+
+/* WCAG 1.4.13 — Error-state styling beyond color (border + icon hint via :invalid). */
+input[aria-invalid="true"],
+textarea[aria-invalid="true"],
+select[aria-invalid="true"] {
+  border-color: #b91c1c !important;
+  background: #fff5f5 !important;
+}
+
+/* WCAG 2.5.5 — Minimum touch target 24x24 CSS px (AA), 44x44 (AAA). */
+button,
+[role="button"],
+a {
+  min-height: 24px;
+}
+
+/* WCAG 1.4.10 — Reflow up to 400% zoom without 2-D scroll. */
+.fi-page-shell,
+.fi-route-shell {
+  max-width: 100%;
+}
+
+/* Forced-colors / high-contrast support. */
+@media (forced-colors: active) {
+  *:focus-visible {
+    outline: 3px solid CanvasText;
+    outline-offset: 2px;
+    box-shadow: none;
+  }
+
+  button,
+  [role="button"],
+  a {
+    forced-color-adjust: none;
   }
 }

@@ -266,12 +266,12 @@ export default function AdminDiagnosticoPage() {
 
   return (
     <div className="p-8">
-      <div className="flex items-start justify-between gap-4 mb-8 flex-wrap">
+      <header className="flex items-start justify-between gap-4 mb-8 flex-wrap">
         <div>
           <h1 style={{ fontWeight: 800, fontSize: "1.5rem", letterSpacing: "-0.03em" }}>
             Diagnóstico E2E
           </h1>
-          <p className="text-gray-500 text-sm mt-0.5 max-w-xl">
+          <p className="text-gray-900 text-sm mt-0.5 max-w-xl">
             Smoke test automatizado que simula a jornada completa: login, cadastro de paciente, criação de pedido,
             pagamento e avanço de status. Use antes de cada demo para garantir que o fluxo principal está saudável.
           </p>
@@ -281,36 +281,39 @@ export default function AdminDiagnosticoPage() {
           disabled={running}
           className="flex items-center gap-2 bg-black text-white px-4 py-2.5 rounded-md text-sm hover:bg-gray-900 transition-colors disabled:opacity-60"
           style={{ fontWeight: 600 }}
+          type="button"
+          aria-busy={running}
+          aria-label={running ? "Executando smoke test" : "Rodar smoke test"}
         >
           {running ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin" /> Executando...
+              <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" focusable="false" /> Executando...
             </>
           ) : (
             <>
-              <Play className="w-4 h-4" /> Rodar smoke test
+              <Play className="w-4 h-4" aria-hidden="true" focusable="false" /> Rodar smoke test
             </>
           )}
         </button>
-      </div>
+      </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-white border border-gray-200 rounded-lg p-5">
-          <CheckCircle2 className="w-4 h-4 text-gray-400 mb-3" />
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6" aria-label="Resumo do diagnóstico">
+        <article className="bg-white border border-gray-200 rounded-lg p-5">
+          <CheckCircle2 className="w-4 h-4 text-gray-700 mb-3" aria-hidden="true" focusable="false" />
           <p className="text-black" style={{ fontSize: "2rem", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1 }}>
             {summary ? `${summary.passed}/${summary.total}` : "--"}
           </p>
-          <p className="text-gray-500 text-xs mt-1">Passos concluídos com sucesso</p>
-        </div>
-        <div className="bg-white border border-gray-200 rounded-lg p-5">
-          <Clock className="w-4 h-4 text-gray-400 mb-3" />
+          <p className="text-gray-900 text-xs mt-1">Passos concluídos com sucesso</p>
+        </article>
+        <article className="bg-white border border-gray-200 rounded-lg p-5">
+          <Clock className="w-4 h-4 text-gray-700 mb-3" aria-hidden="true" focusable="false" />
           <p className="text-black" style={{ fontSize: "1.25rem", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1 }}>
             {summary?.durationMs ? `${Math.round(summary.durationMs / 10) / 100}s` : "--"}
           </p>
-          <p className="text-gray-500 text-xs mt-1">Duração da execução</p>
-        </div>
-        <div className="bg-white border border-gray-200 rounded-lg p-5">
-          <CircleDashed className="w-4 h-4 text-gray-400 mb-3" />
+          <p className="text-gray-900 text-xs mt-1">Duração da execução</p>
+        </article>
+        <article className="bg-white border border-gray-200 rounded-lg p-5">
+          <CircleDashed className="w-4 h-4 text-gray-700 mb-3" aria-hidden="true" focusable="false" />
           <p className="text-black" style={{ fontSize: "1rem", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.2 }}>
             {summary?.finishedAt
               ? new Intl.DateTimeFormat("pt-BR", {
@@ -322,54 +325,64 @@ export default function AdminDiagnosticoPage() {
                 }).format(new Date(summary.finishedAt))
               : "Ainda não executado"}
           </p>
-          <p className="text-gray-500 text-xs mt-1">Última execução</p>
-        </div>
-      </div>
+          <p className="text-gray-900 text-xs mt-1">Última execução</p>
+        </article>
+      </section>
 
-      <div className="bg-white border border-gray-200 rounded-lg">
+      <section className="bg-white border border-gray-200 rounded-lg" aria-labelledby="smoke-steps-title">
         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
           <div>
-            <h2 className="text-sm text-black" style={{ fontWeight: 600 }}>
+            <h2 id="smoke-steps-title" className="text-sm text-black" style={{ fontWeight: 600 }}>
               Passos do smoke test
             </h2>
-            <p className="text-xs text-gray-400 mt-0.5">
+            <p className="text-xs text-gray-900 mt-0.5">
               Execução sequencial, cada passo com critério de aceite próprio.
             </p>
           </div>
         </div>
-        <ol className="divide-y divide-gray-50">
+        <ol className="divide-y divide-gray-50 list-none p-0 m-0" aria-live="polite">
           {steps.map((step, idx) => {
             const visuals = statusStyles[step.status];
             const Icon = visuals.icon;
             return (
               <li key={step.id} className="px-6 py-4 flex items-start gap-4">
-                <div className="w-8 h-8 rounded-md border border-gray-200 flex items-center justify-center flex-shrink-0">
-                  <Icon className={`w-4 h-4 ${visuals.accent} ${step.status === "running" ? "animate-spin" : ""}`} />
+                <div
+                  className="w-8 h-8 rounded-md border border-gray-200 flex items-center justify-center shrink-0"
+                  aria-hidden="true"
+                >
+                  <Icon className={`w-4 h-4 ${visuals.accent} ${step.status === "running" ? "animate-spin" : ""}`} aria-hidden="true" focusable="false" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-xs text-gray-400 font-mono">#{String(idx + 1).padStart(2, "0")}</span>
-                    <p className="text-sm text-black" style={{ fontWeight: 600 }}>
+                    <span className="text-xs text-gray-900 font-mono" aria-label={`Passo ${idx + 1}`}>
+                      #{String(idx + 1).padStart(2, "0")}
+                    </span>
+                    <p className="text-sm text-black m-0" style={{ fontWeight: 600 }}>
                       {step.title}
                     </p>
                     <span
                       className={`text-[10px] px-1.5 py-0.5 rounded border uppercase tracking-wider ${visuals.pill}`}
                       style={{ fontWeight: 600 }}
+                      role="status"
                     >
+                      <span className="sr-only">Status: </span>
                       {pillLabel[step.status]}
                     </span>
                     {typeof step.durationMs === "number" && (
-                      <span className="text-[10px] text-gray-400">{step.durationMs}ms</span>
+                      <span className="text-[10px] text-gray-900" aria-label={`Duração ${step.durationMs} milissegundos`}>
+                        {step.durationMs}ms
+                      </span>
                     )}
                   </div>
-                  <p className="text-xs text-gray-500 mt-0.5">{step.description}</p>
+                  <p className="text-xs text-gray-900 mt-0.5">{step.description}</p>
                   {step.message && (
                     <p
                       className={`text-xs mt-2 px-3 py-2 rounded-md border ${
                         step.status === "fail"
                           ? "bg-gray-900 text-white border-gray-900"
-                          : "bg-gray-50 text-gray-700 border-gray-100"
+                          : "bg-gray-50 text-gray-900 border-gray-100"
                       }`}
+                      role={step.status === "fail" ? "alert" : undefined}
                     >
                       {step.message}
                     </p>
@@ -379,9 +392,9 @@ export default function AdminDiagnosticoPage() {
             );
           })}
         </ol>
-      </div>
+      </section>
 
-      <p className="mt-4 text-xs text-gray-400">
+      <p className="mt-4 text-xs text-gray-900">
         Dica: abra a página de Auditoria em outra aba antes de rodar o smoke test para ver os eventos sendo registrados em tempo real via sincronização entre abas.
       </p>
     </div>

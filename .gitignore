@@ -44,3 +44,10 @@ next-env.d.ts
 .vscode/
 .claude/
 .agent
+
+# e2e (Playwright)
+e2e/.artifacts/
+e2e/.report-html/
+e2e/.report-site/
+playwright-report/
+test-results/

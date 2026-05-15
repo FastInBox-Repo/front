@@ -1,0 +1,103 @@
+name: E2E Suite and Video Report
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    name: Playwright with Video Report
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout front
+        uses: actions/checkout@v4
+        with:
+          path: front
+
+      - name: Checkout back
+        uses: actions/checkout@v4
+        with:
+          repository: FastInBox-Repo/back
+          path: back
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: |
+            front/package-lock.json
+            back/package-lock.json
+
+      - name: Install front
+        working-directory: front
+        run: npm ci
+
+      - name: Install back
+        working-directory: back
+        run: npm ci
+
+      - name: Install Playwright browsers
+        working-directory: front
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright suite
+        working-directory: front
+        env:
+          CI: 'true'
+        run: npx playwright test
+
+      - name: Upload raw artifacts (videos and traces)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-artifacts
+          path: front/e2e/.artifacts
+          retention-days: 14
+
+      - name: Upload static report site
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-report-site
+          path: front/e2e/.report-site
+          retention-days: 30
+
+      - name: Checkout docs repo
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/checkout@v4
+        with:
+          repository: FastInBox-Repo/docs
+          path: docs
+          token: ${{ secrets.DOCS_DEPLOY_TOKEN }}
+
+      - name: Sync report into docs
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          rm -rf docs/documents/e2e-report
+          mkdir -p docs/documents/e2e-report
+          cp -R front/e2e/.report-site/. docs/documents/e2e-report/
+
+      - name: Commit and push to docs repo
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        working-directory: docs
+        run: |
+          git config user.name "fastinbox-e2e-bot"
+          git config user.email "qa@fastinbox.com.br"
+          git add documents/e2e-report
+          if git diff --cached --quiet; then
+            echo "Nada a publicar."
+          else
+            git commit -m "ci(e2e): atualiza relatorio de testes E2E"
+            git push origin main
+          fi
