@@ -442,31 +442,42 @@ export default function HomePage() {
               Respostas diretas para as dúvidas mais comuns sobre a plataforma.
             </p>
           </div>
-          <div className="space-y-3 fi-stagger">
+          <div className="space-y-4 fi-stagger">
             {faqs.map((faq, idx) => {
               const isOpen = openFaq === idx;
               return (
                 <article
                   key={faq.question}
-                  className={`border rounded-xl bg-white transition-colors ${isOpen ? "border-black" : "border-gray-300"}`}
+                  className="border-2 border-black bg-white transition-transform"
+                  style={{
+                    boxShadow: isOpen ? "6px 6px 0 #000000" : "4px 4px 0 #000000",
+                    transform: isOpen ? "translate(-1px, -1px)" : "none",
+                  }}
                 >
                   <button
                     onClick={() => setOpenFaq(isOpen ? null : idx)}
                     className="w-full flex items-center justify-between gap-4 text-left px-5 py-4"
                     aria-expanded={isOpen}
+                    style={{
+                      border: "none",
+                      borderBottom: isOpen ? "2px solid #000000" : "none",
+                      boxShadow: "none",
+                      background: isOpen ? "#f6f6f6" : "#ffffff",
+                      transform: "none",
+                    }}
                   >
-                    <span className="text-black text-sm" style={{ fontWeight: 600 }}>
+                    <span className="text-black text-sm" style={{ fontWeight: 700 }}>
                       {faq.question}
                     </span>
                     {isOpen ? (
-                      <Minus className="w-4 h-4 text-gray-800 flex-shrink-0" />
+                      <Minus className="w-4 h-4 text-black shrink-0" />
                     ) : (
-                      <Plus className="w-4 h-4 text-gray-700 flex-shrink-0" />
+                      <Plus className="w-4 h-4 text-black shrink-0" />
                     )}
                   </button>
                   {isOpen && (
-                    <div className="px-5 pb-5">
-                      <p className="text-gray-800 text-sm" style={{ lineHeight: 1.7 }}>
+                    <div className="px-5 py-4">
+                      <p className="text-black text-sm" style={{ lineHeight: 1.7 }}>
                         {faq.answer}
                       </p>
                     </div>
