@@ -57,9 +57,9 @@ async function request<T = unknown>(path: string, options: FetchOptions = {}): P
   });
 
   if (!response.ok) {
-    let payload: any = {};
+    let payload: { message?: string; code?: string; details?: unknown } = {};
     try {
-      payload = await response.json();
+      payload = (await response.json()) as typeof payload;
     } catch {
       /* ignore */
     }
@@ -152,26 +152,29 @@ export const publicOrdersApi = {
 };
 
 export const ordersApi = {
-  list: (params?: { status?: string }) => {
+  list: <T = unknown>(params?: { status?: string }) => {
     const query = params?.status ? `?status=${encodeURIComponent(params.status)}` : "";
-    return request<any[]>(`/orders${query}`);
+    return request<T[]>(`/orders${query}`);
   },
-  get: (id: string) => request<any>(`/orders/${id}`),
-  history: (id: string) => request<any[]>(`/orders/${id}/history`),
+  get: <T = unknown>(id: string) => request<T>(`/orders/${id}`),
+  history: <T = unknown>(id: string) => request<T[]>(`/orders/${id}/history`),
   startProduction: (id: string) => request(`/orders/${id}/start-production`, { method: "POST" }),
   markReady: (id: string) => request(`/orders/${id}/mark-ready`, { method: "POST" }),
   markDelivered: (id: string) => request(`/orders/${id}/mark-delivered`, { method: "POST" }),
 };
 
 export const patientsApi = {
-  list: (q?: string) => request<any[]>(`/patients${q ? `?q=${encodeURIComponent(q)}` : ""}`),
-  create: (payload: any) => request<any>("/patients", { method: "POST", body: JSON.stringify(payload) }),
-  update: (id: string, payload: any) => request<any>(`/patients/${id}`, { method: "PATCH", body: JSON.stringify(payload) }),
-  remove: (id: string) => request<any>(`/patients/${id}`, { method: "DELETE" }),
+  list: <T = unknown>(q?: string) =>
+    request<T[]>(`/patients${q ? `?q=${encodeURIComponent(q)}` : ""}`),
+  create: <T = unknown>(payload: Record<string, unknown>) =>
+    request<T>("/patients", { method: "POST", body: JSON.stringify(payload) }),
+  update: <T = unknown>(id: string, payload: Record<string, unknown>) =>
+    request<T>(`/patients/${id}`, { method: "PATCH", body: JSON.stringify(payload) }),
+  remove: <T = unknown>(id: string) => request<T>(`/patients/${id}`, { method: "DELETE" }),
 };
 
 export const catalogApi = {
-  ingredients: () => request<any[]>("/ingredients"),
-  compositions: () => request<any[]>("/compositions"),
-  packagings: () => request<any[]>("/packagings"),
+  ingredients: <T = unknown>() => request<T[]>("/ingredients"),
+  compositions: <T = unknown>() => request<T[]>("/compositions"),
+  packagings: <T = unknown>() => request<T[]>("/packagings"),
 };
