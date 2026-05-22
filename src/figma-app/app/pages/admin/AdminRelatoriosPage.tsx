@@ -113,7 +113,7 @@ export default function AdminRelatoriosPage() {
           <p className="text-gray-700 text-sm mt-0.5">Operacao, faturamento e comissoes consolidadas por periodo.</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          <div className="flex items-center gap-1 border border-black rounded-md p-1 bg-white">
+          <div className="flex items-center gap-1 border border-black rounded-md p-1 bg-white" role="group" aria-label="Periodo do relatorio">
             <CalendarRange className="w-4 h-4 ml-1 text-gray-700" aria-hidden="true" />
             {periodOptions.map((opt) => (
               <button
@@ -122,6 +122,7 @@ export default function AdminRelatoriosPage() {
                 onClick={() => setPeriod(opt.id)}
                 className={`px-2.5 py-1 text-xs rounded transition-colors ${period === opt.id ? "bg-black text-white" : "text-gray-700 hover:bg-gray-100"}`}
                 style={{ fontWeight: 600 }}
+                aria-pressed={period === opt.id}
               >
                 {opt.label}
               </button>
@@ -202,14 +203,15 @@ export default function AdminRelatoriosPage() {
         </header>
         {commissions.length > 0 ? (
           <div className="overflow-x-auto">
-            <table className="w-full text-sm border-collapse">
+            <table className="w-full text-sm border-collapse" aria-label="Comissoes por nutricionista no periodo selecionado">
+              <caption className="sr-only">Tabela de comissoes por nutricionista. Inclui pedidos, subtotal, comissao FastInBox e repasse total.</caption>
               <thead>
                 <tr className="border-b-2 border-black">
-                  <th className="text-left py-2 px-2" style={{ fontWeight: 700 }}>Nutricionista</th>
-                  <th className="text-right py-2 px-2" style={{ fontWeight: 700 }}>Pedidos</th>
-                  <th className="text-right py-2 px-2" style={{ fontWeight: 700 }}>Subtotal</th>
-                  <th className="text-right py-2 px-2" style={{ fontWeight: 700 }}>Comissao</th>
-                  <th className="text-right py-2 px-2" style={{ fontWeight: 700 }}>Repasse</th>
+                  <th scope="col" className="text-left py-2 px-2" style={{ fontWeight: 700 }}>Nutricionista</th>
+                  <th scope="col" className="text-right py-2 px-2" style={{ fontWeight: 700 }}>Pedidos</th>
+                  <th scope="col" className="text-right py-2 px-2" style={{ fontWeight: 700 }}>Subtotal</th>
+                  <th scope="col" className="text-right py-2 px-2" style={{ fontWeight: 700 }}>Comissao</th>
+                  <th scope="col" className="text-right py-2 px-2" style={{ fontWeight: 700 }}>Repasse</th>
                 </tr>
               </thead>
               <tbody>
