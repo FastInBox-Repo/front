@@ -189,14 +189,33 @@ textarea::placeholder {
 }
 
 /* WCAG 1.4.3 — Boost light-gray text contrast on dark surfaces (>=4.5:1). */
+.bg-black [class*="text-gray-100"],
 .bg-black [class*="text-gray-200"],
 .bg-black [class*="text-gray-300"],
 .bg-black [class*="text-gray-400"],
+.bg-gray-900 [class*="text-gray-100"],
 .bg-gray-900 [class*="text-gray-200"],
 .bg-gray-900 [class*="text-gray-300"],
+[data-dark-surface] [class*="text-gray-100"],
 [data-dark-surface] [class*="text-gray-200"],
-[data-dark-surface] [class*="text-gray-300"] {
-  color: #e5e7eb !important;
+[data-dark-surface] [class*="text-gray-300"],
+[data-dark-surface] [class*="text-gray-400"] {
+  color: #f3f4f6 !important;
+}
+
+/* Force white on bare text elements inside dark surfaces (safety net for inherited body color).
+   Uses :where() to keep specificity zero so Tailwind utilities (text-black/text-white) always win. */
+:where([data-dark-surface]),
+:where([data-dark-surface] p),
+:where([data-dark-surface] span),
+:where([data-dark-surface] a),
+:where([data-dark-surface] button) {
+  color: #ffffff;
+}
+
+/* Explicit white utility hardening on dark surface. */
+[data-dark-surface] [class*="text-white"] {
+  color: #ffffff !important;
 }
 
 [class*="bg-gray-50"],
