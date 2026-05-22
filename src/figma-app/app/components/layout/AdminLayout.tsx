@@ -1,6 +1,7 @@
 import { Outlet, NavLink, useNavigate } from "react-router";
 import {
   Activity,
+  BarChart3,
   Box,
   LayoutDashboard,
   LogOut,
@@ -16,6 +17,7 @@ const navItems = [
   { to: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { to: "/admin/pedidos", icon: ShoppingBag, label: "Pedidos" },
   { to: "/admin/usuarios", icon: Users, label: "Usuários" },
+  { to: "/admin/relatorios", icon: BarChart3, label: "Relatórios" },
   { to: "/admin/auditoria", icon: Activity, label: "Auditoria" },
   { to: "/admin/diagnostico", icon: ShieldCheck, label: "Diagnóstico" },
   { to: "/admin/configuracoes", icon: Settings, label: "Configurações" },
